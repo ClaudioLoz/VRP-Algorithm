@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.utils.Util;
+
 public class Node {
     private int x;
     private int y;
@@ -9,6 +11,15 @@ public class Node {
         this.y = y;
     }
 
+
+    public double distance(Node node) {
+        return Util.euclideanDistance(getX(), node.getX(), getY(), node.getY());
+    }
+
+    public void setCoordinates(int x,int y){
+        this.x=x;
+        this.y=y;
+    }
     public int getX() {
         return x;
     }
@@ -24,4 +35,6 @@ public class Node {
     public void setY(int y) {
         this.y = y;
     }
+
+
 }

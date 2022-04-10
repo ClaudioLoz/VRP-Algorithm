@@ -1,11 +1,11 @@
 package com.company;
 
 public class Order extends Node{
-    private String id; // i: customer number
+    private String id; // i: order number
     private int timeDemand;
     private int loadDemand;
 
-    public Order(int x, int y, String id, int timeDemand, int loadDemand) {
+    public Order( String id, int x, int y,int timeDemand, int loadDemand) {
         super(x, y);
         this.id = id;
         this.timeDemand = timeDemand;
