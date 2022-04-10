@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class Vehicle extends Node {
+    private String id;
     private Depot startDepot;
     private Depot endDepot;
     private int currentLoad = 0;
@@ -223,5 +224,13 @@ public class Vehicle extends Node {
 
     public void setRoute(List<Order> route) {
         this.route = route;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

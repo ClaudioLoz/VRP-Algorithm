@@ -166,10 +166,8 @@ public class Individual {
         Vehicle vehicle = vehicles.get(randomIndex);
         List<Order> newRoute = vehicle.swapMutate();
         Vehicle newVehicle = new Vehicle(vehicle.getStartDepot(), newRoute);
-
         newVehicles.remove(vehicle);
         newVehicles.add(newVehicle);
-
         return newVehicles;
     }
 

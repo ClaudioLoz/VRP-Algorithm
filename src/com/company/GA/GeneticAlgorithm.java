@@ -36,8 +36,7 @@ public class GeneticAlgorithm {
 
 
     public void run() {
-        for (int i=1;i<=maxGenerations;i++)
-        population.GArunned();
+        for (int i=1;i<=maxGenerations;i++) population.GArunned();
     }
 
     public double getAlphaDuration() {

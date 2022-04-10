@@ -10,16 +10,17 @@ public class Depot extends Node{
     private int maxVehicles; // m: maximum number of vehicles available in each depot
     private List<Order> orders;
 
-    public Depot(int x, int y, String id, double maxDuration, int maxVehicles) {
+    public Depot(int x, int y, String id, double maxDuration,int maxLoad, int maxVehicles) {
         super(x, y);
         this.id = id;
         this.maxDuration = maxDuration;
+        this.maxLoad= maxLoad;
         this.maxVehicles = maxVehicles;
+        this.orders= new ArrayList<>();
     }
 
     public Depot(int maxDuration, int maxLoad, int maxVehicles) {
         super(0, 0);
-        this.id = id;
         this.orders = new ArrayList<>();
         this.maxDuration = maxDuration;
         this.maxLoad = maxLoad;
@@ -29,8 +30,6 @@ public class Depot extends Node{
     public Depot(int x, int y) {
         super(x, y);
     }
-
-
 
 
     public String getId() {
