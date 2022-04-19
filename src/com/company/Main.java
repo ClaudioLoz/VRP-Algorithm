@@ -112,7 +112,7 @@ public class Main {
     }
 
     public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
-        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas:";
+        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
         for (Order order : route) {
             output += order.getId() + " ";
         }

@@ -165,7 +165,6 @@ public class Population {
         List<Vehicle> solutionVehicles = parents[0].getVehicles();
         int randIndex = Util.randomIndex(solutionVehicles.size());
         Vehicle solutionVehicle = solutionVehicles.get(randIndex);
-
         List<Vehicle> partnerVehicles = parents[1].getVehicles();
         int randIndex2 = Util.randomIndex(parents[1].getVehicles().size());
 
@@ -183,6 +182,7 @@ public class Population {
         }
 
         return children;
+
     }
 
     private Individual[] selection() {
