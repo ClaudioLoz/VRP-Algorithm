@@ -168,6 +168,11 @@ public class Vehicle extends Node {
         int minIndex = -1;
         //we already assigned orders to their nearest depots so now we only care  about vehicle capacity and route(order of orders lol)
         if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
+            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
+            if(allowableLoad>0){
+                orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
+                addOrderToRoute()
+            }
             return false;
         } else if (route.size() == 0) {
             addOrderToRoute(orderToAdd);
