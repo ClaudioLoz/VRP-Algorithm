@@ -170,8 +170,11 @@ public class Vehicle extends Node {
         if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
             int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
             if(allowableLoad>0){
+                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
+                System.out.println(this+" "+currentLoad+" "+allowableLoad);
                 orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
-                addOrderToRoute()
+                System.out.println(orderToAdd.getLoadDemand());
+                addOrderToRoute(orderToAdd);
             }
             return false;
         } else if (route.size() == 0) {
