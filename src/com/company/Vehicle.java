@@ -14,13 +14,13 @@ public class Vehicle extends Node {
     private List<Order> route = new ArrayList<>();
 
     public  Vehicle(Depot depot) {
-        super(depot.getX(), depot.getY());
+        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
     }
 
     public Vehicle(Depot depot, List<Order> route) {
-        super(depot.getX(), depot.getY());
+        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
         this.route = route;
@@ -30,7 +30,7 @@ public class Vehicle extends Node {
     }
 
     public Vehicle(Depot startDepot, Depot endDepot, List<Order> route) {
-        super(startDepot.getX(), startDepot.getY());
+        super(startDepot.getX1(), startDepot.getY1());
         this.startDepot = startDepot;
         this.endDepot = endDepot;
         this.route = route;
@@ -133,6 +133,7 @@ public class Vehicle extends Node {
         return newRoute;
     }
 
+
     public boolean addOrderToRoute(Order order) {
         route.add(order);
         currentLoad += order.getLoadDemand();
@@ -168,14 +169,14 @@ public class Vehicle extends Node {
         int minIndex = -1;
         //we already assigned orders to their nearest depots so now we only care  about vehicle capacity and route(order of orders lol)
         if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
-            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
-            if(allowableLoad>0){
-                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
-                System.out.println(this+" "+currentLoad+" "+allowableLoad);
-                orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
-                System.out.println(orderToAdd.getLoadDemand());
-                addOrderToRoute(orderToAdd);
-            }
+//            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
+//            if(allowableLoad>0){
+//                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
+//                System.out.println(this+" "+currentLoad+" "+allowableLoad);
+//                orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
+//                System.out.println(orderToAdd.getLoadDemand());
+//                addOrderToRoute(orderToAdd);
+//            }
             return false;
         } else if (route.size() == 0) {
             addOrderToRoute(orderToAdd);

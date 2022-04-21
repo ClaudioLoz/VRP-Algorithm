@@ -16,6 +16,24 @@ import static com.company.utils.Util.euclideanDistance;
 public class Main {
 
     public static void main(String[] args) throws IOException {
+        //Kinda Graph
+        List<Node> map = new ArrayList<>();
+
+        Node d1= new Node("010601",  -6.39590702,-77.4821999);
+        Node d2= new Node("010201",  -5.63906152, -78.53166353);
+        Node d3= new Node("010401",  -4.59234702, -77.86447689);
+        Node off1= new Node("010101",  -6.22940827, -77.8724339);
+        Node off2= new Node("010301",  -5.90432416, -77.79809916);
+
+        //adjacents of each Node
+        d1.setAdjacents(List.of(off1,off2));
+        d2.setAdjacents(List.of(off1,off2));
+        d3.setAdjacents(List.of(off1,off2));
+        off1.setAdjacents(List.of(d1,d2,d3,off2));
+        off2.setAdjacents(List.of(d1,d2,d3,off1));
+        map = List.of(d1,d2,d3,off1,off2);
+        System.out.println(map);
+
         //parameters
          final int maxNumberLimaVehicles = 6;
          final int maxNumberTrujilloVehicles = 6;
@@ -39,12 +57,9 @@ public class Main {
         String line;
         int index = 0;
         int depotIndex = 0;
-
         int maxVehicles = 0; // m: maximum number of vehicles available in each depot
         int totalCustomers = 0; // n: total number of customers
         int depotsCount = 0; // t: number of depots
-
-        System.out.println("========= Parsing map file =========");
         //just reading data
         while ((line = br.readLine()) != null) {
             String[] stringLineArr = line.trim().split("\\s+");
@@ -75,8 +90,9 @@ public class Main {
             index++;
         }
 
+
         //this helps GA
-        assignOrdersToNearestDepot(orders,depots);
+//        assignOrdersToNearestDepot(orders,depots);
 
         GeneticAlgorithm ga = new GeneticAlgorithm(depots);
         ga.run();
@@ -92,12 +108,15 @@ public class Main {
 
     }
 
+
+
+
     public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
         Depot nearestDepot = null;
         for (Order order : orders) {
             double minimumDistance = Double.MAX_VALUE;
             for (Depot depot : depots) {
-                double distance = euclideanDistance(order.getX(), depot.getX(), order.getY(), depot.getY());
+                double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
                 if (distance < minimumDistance) {
                     minimumDistance = distance;
                     nearestDepot = depot;

@@ -22,8 +22,12 @@ public class Util {
         return random.nextDouble();
     }
 
-
+    //out of use
     public static double euclideanDistance(int x1, int x2, int y1, int y2) {
+        return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+    }
+
+    public static double euclideanDistance(double x1, double x2, double y1, double y2) {
         return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
     }
 
