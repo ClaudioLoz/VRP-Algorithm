@@ -16,6 +16,7 @@ public class Depot extends Node{
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;
+        this.orders= new ArrayList<>();
     }
 
     public Depot(int x, int y, String id, double maxDuration, int maxLoad, int maxVehicles) {

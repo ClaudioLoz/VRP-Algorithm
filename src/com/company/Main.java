@@ -15,9 +15,8 @@ import java.util.*;
 import static com.company.utils.Util.euclideanDistance;
 
 public class Main {
-  public static Graph map = new Graph();
-
-  public static void main(String[] args) throws IOException {
+    public static Relationship map[][];
+    public static void main(String[] args) throws IOException {
 
     List<Node> nodes = new ArrayList<>();
     Node d1 = new Node("010601", -6.39590702, -77.4821999, 0);
@@ -26,6 +25,13 @@ public class Main {
     Node off1 = new Node("010101", -6.22940827, -77.8724339, 3);
     Node off2 = new Node("010301", -5.90432416, -77.79809916, 4);
 
+        nodes.add(d1);
+        nodes.add(d2);
+        nodes.add(d3);
+        nodes.add(off1);
+        nodes.add(off2);
+        int nodesNumber= nodes.size();
+   
     nodes.add(d1);
     nodes.add(d2);
     nodes.add(d3);
@@ -169,6 +175,10 @@ public class Main {
     //this helps init population of GA
 //        assignOrdersToNearestDepot2(orders,depots);
 
+        //this helps init population of GA
+//        assignOrdersToNearestDepot2(orders,depots);
+//        depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
+//            depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
 //        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
 //        ga.run();
 
@@ -187,53 +197,55 @@ public class Main {
   }
 
 
-  public static void assignOrdersToNearestDepot2(List<Order> orders, List<Depot> depots) {
-    Depot nearestDepot = null;
-    for (Order order : orders) {
-      double minimumDistance = Double.MAX_VALUE;
-      for (Depot depot : depots) {
+    public static void assignOrdersToNearestDepot2(List<Order> orders,List<Depot> depots) {
+        Depot nearestDepot = null;
+        for (Order order : orders) {
+            double minimumDistance = Double.MAX_VALUE;
+            for (Depot depot : depots) {
+                double distance = map[depot.getMatrixIndex()][order.getMatrixIndex()].getDistance();
+//                if(distance==-1) distance=
+                if (distance < minimumDistance) {
+                    minimumDistance = distance;
+                    nearestDepot = depot;
+                }
+            }
 
-        if (true) {
-          double distance = euclideanDistance(order.getX(), depot.getX(), order.getY(), depot.getY());
-          if (distance < minimumDistance) {
-            minimumDistance = distance;
-            nearestDepot = depot;
-          }
+            if (nearestDepot == null) {
+                throw new NullPointerException("Nearest Depot is not set");
+            }
+
+            nearestDepot.getOrders().add(order);
+
         }
-      }
-
-      if (nearestDepot == null) {
-        throw new NullPointerException("Nearest Depot is not set");
-      }
-      nearestDepot.getOrders().add(order);
     }
-  }
 
-  public static void assignOrdersToNearestDepot(List<Order> orders, List<Depot> depots) {
-    Depot nearestDepot = null;
-    for (Order order : orders) {
-      double minimumDistance = Double.MAX_VALUE;
-      for (Depot depot : depots) {
-        double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
-        if (distance < minimumDistance) {
-          minimumDistance = distance;
-          nearestDepot = depot;
+    public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
+        Depot nearestDepot = null;
+        for (Order order : orders) {
+            double minimumDistance = Double.MAX_VALUE;
+            for (Depot depot : depots) {
+                    double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance;
+                        nearestDepot = depot;
+                    }
+            }
+
+            if (nearestDepot == null) {
+                throw new NullPointerException("Nearest Depot is not set");
+            }
+            nearestDepot.getOrders().add(order);
         }
-      }
-
-      if (nearestDepot == null) {
-        throw new NullPointerException("Nearest Depot is not set");
-      }
-      nearestDepot.getOrders().add(order);
     }
-  }
 
-  public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
-    String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand + "\n ruta de entrega en oficinas: ";
-    for (Order order : route) {
-      output += order.getId() + " ";
+
+
+    public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
+        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
+        for (Order order : route) {
+            output += order.getId() + " ";
+        }
+        return output;
     }
-    return output;
-  }
 
 }
