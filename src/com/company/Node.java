@@ -11,8 +11,7 @@ public class Node {
     private int y1;
     private double x;
     private double y;
-    private List<Node> adjacents= new ArrayList<>();
-
+    private int matrixIndex;
     public Node() {
     }
 
@@ -24,6 +23,13 @@ public class Node {
     public Node(double x, double y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Node(String mapId, double x, double y, int matrixIndex) {
+        this.mapId = mapId;
+        this.x = x;
+        this.y = y;
+        this.matrixIndex = matrixIndex;
     }
 
     public Node(String mapId, double x, double y) {
@@ -85,11 +91,8 @@ public class Node {
         this.y = y;
     }
 
-    public List<Node> getAdjacents() {
-        return adjacents;
-    }
-
-    public void setAdjacents(List<Node> adjacents) {
-        this.adjacents = adjacents;
+    @Override
+    public String toString() {
+        return mapId+"(x: "+x+" y:"+y+")";
     }
 }

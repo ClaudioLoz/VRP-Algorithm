@@ -14,43 +14,91 @@ import java.util.Locale;
 import static com.company.utils.Util.euclideanDistance;
 
 public class Main {
+    public static Graph map = new Graph();
 
     public static void main(String[] args) throws IOException {
-        //Kinda Graph
-        List<Node> map = new ArrayList<>();
 
-        Node d1= new Node("010601",  -6.39590702,-77.4821999);
-        Node d2= new Node("010201",  -5.63906152, -78.53166353);
-        Node d3= new Node("010401",  -4.59234702, -77.86447689);
-        Node off1= new Node("010101",  -6.22940827, -77.8724339);
-        Node off2= new Node("010301",  -5.90432416, -77.79809916);
+        List<Node> nodes = new ArrayList<>();
+        Node d1= new Node("010601",  -6.39590702,-77.4821999,0);
+        Node d2= new Node("010201",  -5.63906152, -78.53166353,1);
+        Node d3= new Node("010401",  -4.59234702, -77.86447689,2);
+        Node off1= new Node("010101",  -6.22940827, -77.8724339,3);
+        Node off2= new Node("010301",  -5.90432416, -77.79809916,4);
 
-        //adjacents of each Node
-        d1.setAdjacents(List.of(off1,off2));
-        d2.setAdjacents(List.of(off1,off2));
-        d3.setAdjacents(List.of(off1,off2));
-        off1.setAdjacents(List.of(d1,d2,d3,off2));
-        off2.setAdjacents(List.of(d1,d2,d3,off1));
-        map = List.of(d1,d2,d3,off1,off2);
+        nodes.add(d1);
+        nodes.add(d2);
+        nodes.add(d3);
+        nodes.add(off1);
+        nodes.add(off2);
+        int nodesNumber= nodes.size();
+        //adjacent nodes
+        Relationship map[][] = {
+                {new Relationship(0),
+                        new Relationship(-1),
+                        new Relationship(30),
+                        new Relationship(50),
+                        new Relationship(10)},
+                {new Relationship(-1),
+                        new Relationship(0),
+                        new Relationship(-1),
+                        new Relationship(35),
+                        new Relationship(15)},
+                {new Relationship(30),
+                        new Relationship(-1),
+                        new Relationship(0),
+                        new Relationship(5),
+                        new Relationship(35)},
+                {new Relationship(50),
+                        new Relationship(35),
+                        new Relationship(5),
+                        new Relationship(0),
+                        new Relationship(20)},
+                {new Relationship(10),
+                        new Relationship(15),
+                        new Relationship(40),
+                        new Relationship(0),
+                        new Relationship(20)},
+        };
+//        for(int i=0;i<nodesNumber;i++){
+//            for(int j=0;j< nodesNumber;j++) {
+//                map[i][j]=new Relationship(nodes.get(i),nodes.get(j));
+//            }
+//        }
+
+
+
+
+        //maybe for REAL routes we need a graph in linkedList implementation
+//        //adjacent nodes of each node bidirectionally
+//        map.addEdge(d1,off1);
+//        map.addEdge(d1,off2);
+//        map.addEdge(d2,off1);
+//        map.addEdge(d2,off2);
+//        map.addEdge(d3,off1);
+//        map.addEdge(d3,off2);
+//        map.addEdge(off1,off2);
+
         System.out.println(map);
 
         //parameters
-         final int maxNumberLimaVehicles = 6;
-         final int maxNumberTrujilloVehicles = 6;
-         final int maxNumberArequipaVehicles = 6;
-         List<Depot> depots = new ArrayList<>();
-         List<Order> orders = new ArrayList<>();
+        final int maxNumberLimaVehicles = 1;
+        final int maxNumberTrujilloVehicles = 1;
+        final int maxNumberArequipaVehicles = 1;
 
-//        depots.add(new Depot(15,20, "1",0,100,maxNumberLimaVehicles));
-//        depots.add(new Depot(50,20, "2",0,100,maxNumberTrujilloVehicles));
-//        depots.add(new Depot(35,55, "3",0,100,maxNumberArequipaVehicles));
-//
-//        orders.add(new Order("1",41,49,0,10));
-//        orders.add(new Order("2",35,17,0,7));
-//        orders.add(new Order("3",55,45,0,13));
-//        orders.add(new Order("4",55,20,0,19));
-//        orders.add(new Order("5",15,30,0,26));
-//        orders.add(new Order("6",25,30,0,3));
+        List<Depot> depots = new ArrayList<>();
+        depots.add(new Depot(d1,"1",40,maxNumberLimaVehicles));
+        depots.add(new Depot(d2,"2",20,maxNumberTrujilloVehicles));
+        depots.add(new Depot(d3,"3",10,maxNumberArequipaVehicles));
+
+
+        List<Order> orders = new ArrayList<>();
+        //orders arrive
+        orders.add(new Order(off1,"1",0,10));
+        orders.add(new Order(off1,"2",0,20));
+        orders.add(new Order(off1,"3",0,15));
+        orders.add(new Order(off1,"4",0,5));
+        orders.add(new Order(off2,"5",0,20));
+
 
         File file = new File("src/com/company/resources/map01");
         BufferedReader br = new BufferedReader(new FileReader(file));
@@ -61,7 +109,7 @@ public class Main {
         int totalCustomers = 0; // n: total number of customers
         int depotsCount = 0; // t: number of depots
         //just reading data
-        while ((line = br.readLine()) != null) {
+        while (false &&(line = br.readLine()) != null) {
             String[] stringLineArr = line.trim().split("\\s+");
             int[] lineArr = Arrays.stream(stringLineArr).mapToInt(Integer::parseInt).toArray();
 
@@ -91,25 +139,47 @@ public class Main {
         }
 
 
-        //this helps GA
-//        assignOrdersToNearestDepot(orders,depots);
-
-        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
-        ga.run();
 
 
-        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
-        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
-        int z=0;
-        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
-            System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
-            z++;
-        }
+        //this helps init population of GA
+//        assignOrdersToNearestDepot2(orders,depots);
+
+//        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
+//        ga.run();
+
+
+//        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
+//        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
+//        int z=0;
+//        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
+//            System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
+//            z++;
+//        }
 
     }
 
 
+    public static void assignOrdersToNearestDepot2(List<Order> orders,List<Depot> depots) {
+        Depot nearestDepot = null;
+        for (Order order : orders) {
+            double minimumDistance = Double.MAX_VALUE;
+            for (Depot depot : depots) {
 
+                if(true){
+                    double distance = euclideanDistance(order.getX(), depot.getX(), order.getY(), depot.getY());
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance;
+                        nearestDepot = depot;
+                    }
+                }
+            }
+
+            if (nearestDepot == null) {
+                throw new NullPointerException("Nearest Depot is not set");
+            }
+            nearestDepot.getOrders().add(order);
+        }
+    }
 
     public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
         Depot nearestDepot = null;

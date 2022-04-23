@@ -10,7 +10,15 @@ public class Depot extends Node{
     private int maxVehicles; // m: maximum number of vehicles available in each depot
     private List<Order> orders;
 
-    public Depot(int x, int y, String id, double maxDuration,int maxLoad, int maxVehicles) {
+
+    public Depot(Node node,String id,int maxLoad,int maxVehicles) {
+        super(node.getMapId(), node.getX(), node.getY());
+        this.id=id;
+        this.maxLoad=maxLoad;
+        this.maxVehicles=maxVehicles;
+    }
+
+    public Depot(int x, int y, String id, double maxDuration, int maxLoad, int maxVehicles) {
         super(x, y);
         this.id = id;
         this.maxDuration = maxDuration;
