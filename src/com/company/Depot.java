@@ -1,5 +1,7 @@
 package com.company;
 
+import com.company.utils.graph.CityNode;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +15,13 @@ public class Depot extends Node{
 
     public Depot(Node node,String id,int maxLoad,int maxVehicles) {
         super(node.getMapId(), node.getX(), node.getY());
+        this.id=id;
+        this.maxLoad=maxLoad;
+        this.maxVehicles=maxVehicles;
+        this.orders= new ArrayList<>();
+    }
+    public Depot(Node node, String id, int maxLoad, int maxVehicles, CityNode cityNode) {
+        super(node.getMapId(), node.getX(), node.getY(), cityNode);
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;

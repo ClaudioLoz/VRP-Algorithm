@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.utils.Util;
+import com.company.utils.graph.CityNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,17 +13,23 @@ public class Node {
     private double x;
     private double y;
     private int matrixIndex;
+    private CityNode city;
     public Node() {
+    }
+    public Node(CityNode city) {
+        this.city = city;
     }
 
     public Node(int x1, int y1) {
         this.x1 = x1;
         this.y1 = y1;
+        
     }
 
-    public Node(double x, double y) {
+    public Node(double x, double y, CityNode city) {
         this.x = x;
         this.y = y;
+      this.city = city;
     }
 
     public Node(String mapId, double x, double y, int matrixIndex) {
@@ -31,6 +38,13 @@ public class Node {
         this.y = y;
         this.matrixIndex = matrixIndex;
     }
+    public Node(String mapId, double x, double y, CityNode city) {
+        this.mapId = mapId;
+        this.x = x;
+        this.y = y;
+        this.matrixIndex = matrixIndex;
+        this.city= city;
+    }
 
     public Node(String mapId, double x, double y) {
         this.mapId = mapId;
@@ -38,9 +52,7 @@ public class Node {
         this.y = y;
     }
 
-    public double realDistance(Node node) {
-        return Util.euclideanDistance(getX(), node.getX(), getY(), node.getY());
-    }
+    
 
     public double distance(Node node) {
         return Util.euclideanDistance(getX1(), node.getX1(), getY1(), node.getY1());
@@ -99,7 +111,15 @@ public class Node {
         this.matrixIndex = matrixIndex;
     }
 
-    @Override
+  public CityNode getCity() {
+    return city;
+  }
+
+  public void setCity(CityNode city) {
+    this.city = city;
+  }
+
+  @Override
     public String toString() {
         return mapId+"(x: "+x+" y:"+y+")";
     }

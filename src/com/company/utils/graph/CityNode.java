@@ -1,6 +1,8 @@
 package com.company.utils.graph;
 
-public class CityNode {
+import com.company.Node;
+
+public class CityNode extends Node {
 
   private static int counter =0;
   private final String name;

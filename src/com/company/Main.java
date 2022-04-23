@@ -1,7 +1,6 @@
 package com.company;
 
 import com.company.GA.GeneticAlgorithm;
-import com.company.utils.GraphShortestPath;
 import com.company.utils.graph.CitiesGraph;
 import com.company.utils.graph.CityNode;
 import com.company.utils.graph.FindPath;
@@ -12,10 +11,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import static com.company.utils.MockGraph.GRAPH;
+import static com.company.utils.MockGraph.initMockGraph;
 import static com.company.utils.Util.euclideanDistance;
 
 public class Main {
-    public static Relationship map[][];
+    private static CitiesGraph graph;
     public static void main(String[] args) throws IOException {
 
     List<Node> nodes = new ArrayList<>();
@@ -31,13 +32,7 @@ public class Main {
         nodes.add(off1);
         nodes.add(off2);
         int nodesNumber= nodes.size();
-   
-    nodes.add(d1);
-    nodes.add(d2);
-    nodes.add(d3);
-    nodes.add(off1);
-    nodes.add(off2);
-    int nodesNumber = nodes.size();
+        
     //adjacent nodes
     Relationship map[][] = {
         {new Relationship(0, 1),
@@ -74,17 +69,17 @@ public class Main {
     CityNode c = new CityNode("C");
     CityNode d = new CityNode("D");
     CityNode e = new CityNode("E");
-    cities.addAll(List.of(a,b,c,d,e));
-
-    CitiesGraph graph = new CitiesGraph(cities);
-    graph.connectCities(a, b, 50);
-    graph.connectCities(b, c, 30);
-    graph.connectCities(c, d, 40);
-    graph.connectCities(d, e, 20);
-    graph.show();
+      CityNode f = new CityNode("F");
+      
+    cities.addAll(List.of(a,b,c,d,e,f));
+//    cities.addAll(List.of(a,b,c,d,e));
+    
+      initMockGraph(a,b,c,d,e,f);
+//      initMockGraph(a,b,c,d,e);
+    
 
     FindPath findPath = new FindPath();
-    System.out.println(findPath.calculateShortestPath(graph, a, e)); //prints 140 as expected
+    System.out.println(FindPath.calculateShortestPath(GRAPH, a, e)); //prints 140 as expected
     
     
 //        for(int i=0;i<nodesNumber;i++){
@@ -111,24 +106,24 @@ public class Main {
 //    gsp.algo_dijkstra(map, 0);
 //    System.out.println("distancia minima entre 0 y 4 es: " + gsp.minimumDistanceBetweenTwoNodes(map, 0, 4));
 
-//        //parameters
-//        final int maxNumberLimaVehicles = 1;
-//        final int maxNumberTrujilloVehicles = 1;
-//        final int maxNumberArequipaVehicles = 1;
+        //parameters
+        final int maxNumberLimaVehicles = 1;
+        final int maxNumberTrujilloVehicles = 1;
+        final int maxNumberArequipaVehicles = 1;
+
+        List<Depot> depots = new ArrayList<>();
+        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles, a));
+        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, f));
+        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, e));
 //
-//        List<Depot> depots = new ArrayList<>();
-//        depots.add(new Depot(d1,"1",40,maxNumberLimaVehicles));
-//        depots.add(new Depot(d2,"2",20,maxNumberTrujilloVehicles));
-//        depots.add(new Depot(d3,"3",10,maxNumberArequipaVehicles));
 //
-//
-//        List<Order> orders = new ArrayList<>();
-//        //orders arrive
-//        orders.add(new Order(off1,"1",0,10));
-//        orders.add(new Order(off1,"2",0,20));
-//        orders.add(new Order(off1,"3",0,15));
-//        orders.add(new Order(off1,"4",0,5));
-//        orders.add(new Order(off2,"5",0,20));
+        List<Order> orders = new ArrayList<>();
+        //orders arrive
+        orders.add(new Order(off1,"b",0,10, b));
+        orders.add(new Order(off1,"c",0,20, c));
+        orders.add(new Order(off1,"d",0,15,d));
+//        orders.add(new Order(off1,"4",0,5,e));
+//        orders.add(new Order(off2,"5",0,20,d));
 //
 //
 //        File file = new File("src/com/company/resources/map01");
@@ -173,27 +168,25 @@ public class Main {
 
 
     //this helps init population of GA
-//        assignOrdersToNearestDepot2(orders,depots);
+        assignOrdersToNearestDepot2(orders,depots);
 
         //this helps init population of GA
 //        assignOrdersToNearestDepot2(orders,depots);
-//        depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
-//            depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
-//        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
-//        ga.run();
+        depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
+            depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
+        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
+        
+        
+        ga.run();
 
 
-//        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
-//        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
-//        int z=0;
-//        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
-//            System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
-//            z++;
-//        }
-
-    
-    
-    
+        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
+        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
+        int z=0;
+        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
+            System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
+            z++;
+        }
   }
 
 
@@ -202,14 +195,12 @@ public class Main {
         for (Order order : orders) {
             double minimumDistance = Double.MAX_VALUE;
             for (Depot depot : depots) {
-                double distance = map[depot.getMatrixIndex()][order.getMatrixIndex()].getDistance();
-//                if(distance==-1) distance=
+                double distance = FindPath.calculateShortestPath(GRAPH, depot.getCity(), order.getCity());
                 if (distance < minimumDistance) {
                     minimumDistance = distance;
                     nearestDepot = depot;
                 }
             }
-
             if (nearestDepot == null) {
                 throw new NullPointerException("Nearest Depot is not set");
             }

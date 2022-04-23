@@ -1,10 +1,13 @@
 package com.company;
 
 import com.company.utils.Util;
+import com.company.utils.graph.FindPath;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.company.utils.MockGraph.GRAPH;
 
 public class Vehicle extends Node {
     private String id;
@@ -66,33 +69,37 @@ public class Vehicle extends Node {
             return routeDistance;
         }
 
-        routeDistance += startDepot.distance(route.get(0));
-        for (int i = 0; i < route.size() - 1; i++) {
-            routeDistance += route.get(i).getTimeDemand();
-            routeDistance += route.get(i).distance(route.get(i + 1));
-        }
-        routeDistance += route.get(route.size() - 1).distance(endDepot);
+      routeDistance += FindPath.calculateShortestPath(GRAPH,startDepot.getCity(),route.get(0).getCity() ); //start depot to first order
+//        duration += copy.get(0).getTimeDemand();//time in that order ( 1 hour) so it have to be changed maybe with a speed factor
+      for (int i = 0; i < route.size() - 1; i++) {
+//            duration += copy.get(i).distance(copy.get(i + 1));
+        routeDistance += FindPath.calculateShortestPath(GRAPH,route.get(i).getCity(), route.get(i+1).getCity() );
+//            duration += copy.get(i + 1).getTimeDemand();
+      }
+//        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
+      routeDistance += FindPath.calculateShortestPath(GRAPH,route.get(route.size()-1).getCity(),endDepot.getCity());
         return routeDistance;
     }
 
     public double calculateRouteDurationIfOrderAdded(int index, Order orderToCheck) {
         if (route.size() == 0) {
-            return (startDepot.distance(orderToCheck) + orderToCheck.distance(endDepot));
+          return FindPath.calculateShortestPath(GRAPH,startDepot.getCity(), endDepot.getCity() ) ;
         }
 
         double duration = 0.0;
         List<Order> copy = new ArrayList<>(route);
         copy.add(index, orderToCheck);
 
-        duration += startDepot.distance(copy.get(0)); //start depot to first order
-        duration += copy.get(0).getTimeDemand();//time in that order ( 1 hour) so it have to be changed maybe with a speed factor
+        duration += FindPath.calculateShortestPath(GRAPH,startDepot.getCity(),copy.get(0).getCity() ); //start depot to first order
+//        duration += copy.get(0).getTimeDemand();//time in that order ( 1 hour) so it have to be changed maybe with a speed factor
         for (int i = 0; i < copy.size() - 1; i++) {
-            duration += copy.get(i).distance(copy.get(i + 1));
-            duration += copy.get(i + 1).getTimeDemand();
+//            duration += copy.get(i).distance(copy.get(i + 1));
+            duration += FindPath.calculateShortestPath(GRAPH,copy.get(i).getCity(), copy.get(i+1).getCity() );
+//            duration += copy.get(i + 1).getTimeDemand();
         }
-        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
-
-        return duration;
+//        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
+      duration += FindPath.calculateShortestPath(GRAPH,copy.get(copy.size()-1).getCity(),endDepot.getCity());
+      return duration;
     }
 
 

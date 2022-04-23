@@ -37,8 +37,8 @@ public class Util {
         lat2 = Math.toRadians(lat2);
         lon2 = Math.toRadians(lon2);
 
-        double dlon = (lon2 – lon1);
-        double dlat = (lat2 – lat1);
+        double dlon = (lon2 - lon1);
+        double dlat = (lat2 - lat1);
 
         double sinlat = Math.sin(dlat / 2);
         double sinlon = Math.sin(dlon / 2);

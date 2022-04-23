@@ -6,10 +6,10 @@ public class FindPath{
 
   //map to hold distances of all node from origin. at the end this map should contain
   //the shortest distance between origin (from) to all other nodes
-  Map<CityNode, Integer> distances;
+  static Map<CityNode, Integer> distances;
 
   //using Dijkstra algorithm
-  public int calculateShortestPath(CitiesGraph graph, CityNode from, CityNode to) {
+  public static int calculateShortestPath(CitiesGraph graph, CityNode from, CityNode to) {
 
     //a container to hold which cities the algorithm has visited
     Set<CityNode> settledCities = new HashSet<>();
@@ -55,7 +55,7 @@ public class FindPath{
     return distances.get(to);
   }
 
-  private CityNode getLowestDistanceCity(Set <CityNode> unsettledCities) {
+  private static  CityNode getLowestDistanceCity(Set <CityNode> unsettledCities) {
 
     return unsettledCities.stream()
         .min((c1,c2)-> Integer.compare(distances.get(c1), distances.get(c2)))
