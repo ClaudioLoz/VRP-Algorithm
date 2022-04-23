@@ -14,8 +14,7 @@ import java.util.Locale;
 import static com.company.utils.Util.euclideanDistance;
 
 public class Main {
-    public static Graph map = new Graph();
-
+    public static Relationship map[][];
     public static void main(String[] args) throws IOException {
 
         List<Node> nodes = new ArrayList<>();
@@ -32,53 +31,39 @@ public class Main {
         nodes.add(off2);
         int nodesNumber= nodes.size();
         //adjacent nodes
-        Relationship map[][] = {
-                {new Relationship(0),
-                        new Relationship(-1),
-                        new Relationship(30),
-                        new Relationship(50),
-                        new Relationship(10)},
-                {new Relationship(-1),
-                        new Relationship(0),
-                        new Relationship(-1),
-                        new Relationship(35),
-                        new Relationship(15)},
-                {new Relationship(30),
-                        new Relationship(-1),
-                        new Relationship(0),
-                        new Relationship(5),
-                        new Relationship(35)},
-                {new Relationship(50),
-                        new Relationship(35),
-                        new Relationship(5),
-                        new Relationship(0),
-                        new Relationship(20)},
-                {new Relationship(10),
-                        new Relationship(15),
-                        new Relationship(40),
-                        new Relationship(0),
-                        new Relationship(20)},
-        };
+//        map = new Relationship[][]{
+//                {new Relationship(0),
+//                        new Relationship(-1),
+//                        new Relationship(30),
+//                        new Relationship(50),
+//                        new Relationship(10)},
+//                {new Relationship(-1),
+//                        new Relationship(0),
+//                        new Relationship(-1),
+//                        new Relationship(35),
+//                        new Relationship(15)},
+//                {new Relationship(30),
+//                        new Relationship(-1),
+//                        new Relationship(0),
+//                        new Relationship(5),
+//                        new Relationship(35)},
+//                {new Relationship(50),
+//                        new Relationship(35),
+//                        new Relationship(5),
+//                        new Relationship(0),
+//                        new Relationship(20)},
+//                {new Relationship(10),
+//                        new Relationship(15),
+//                        new Relationship(40),
+//                        new Relationship(0),
+//                        new Relationship(20)},
+//        };
 //        for(int i=0;i<nodesNumber;i++){
 //            for(int j=0;j< nodesNumber;j++) {
 //                map[i][j]=new Relationship(nodes.get(i),nodes.get(j));
 //            }
 //        }
 
-
-
-
-        //maybe for REAL routes we need a graph in linkedList implementation
-//        //adjacent nodes of each node bidirectionally
-//        map.addEdge(d1,off1);
-//        map.addEdge(d1,off2);
-//        map.addEdge(d2,off1);
-//        map.addEdge(d2,off2);
-//        map.addEdge(d3,off1);
-//        map.addEdge(d3,off2);
-//        map.addEdge(off1,off2);
-
-        System.out.println(map);
 
         //parameters
         final int maxNumberLimaVehicles = 1;
@@ -94,10 +79,10 @@ public class Main {
         List<Order> orders = new ArrayList<>();
         //orders arrive
         orders.add(new Order(off1,"1",0,10));
-        orders.add(new Order(off1,"2",0,20));
-        orders.add(new Order(off1,"3",0,15));
-        orders.add(new Order(off1,"4",0,5));
-        orders.add(new Order(off2,"5",0,20));
+//        orders.add(new Order(off1,"2",0,20));
+//        orders.add(new Order(off1,"3",0,15));
+//        orders.add(new Order(off1,"4",0,5));
+//        orders.add(new Order(off2,"5",0,20));
 
 
         File file = new File("src/com/company/resources/map01");
@@ -139,11 +124,12 @@ public class Main {
         }
 
 
-
+//        System.out.println(calculateDistanceByHaversineFormula());
 
         //this helps init population of GA
-//        assignOrdersToNearestDepot2(orders,depots);
-
+        assignOrdersToNearestDepot2(orders,depots);
+        depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
+            depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
 //        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
 //        ga.run();
 
@@ -164,29 +150,8 @@ public class Main {
         for (Order order : orders) {
             double minimumDistance = Double.MAX_VALUE;
             for (Depot depot : depots) {
-
-                if(true){
-                    double distance = euclideanDistance(order.getX(), depot.getX(), order.getY(), depot.getY());
-                    if (distance < minimumDistance) {
-                        minimumDistance = distance;
-                        nearestDepot = depot;
-                    }
-                }
-            }
-
-            if (nearestDepot == null) {
-                throw new NullPointerException("Nearest Depot is not set");
-            }
-            nearestDepot.getOrders().add(order);
-        }
-    }
-
-    public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
-        Depot nearestDepot = null;
-        for (Order order : orders) {
-            double minimumDistance = Double.MAX_VALUE;
-            for (Depot depot : depots) {
-                double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
+                double distance = map[depot.getMatrixIndex()][order.getMatrixIndex()].getDistance();
+//                if(distance==-1) distance=
                 if (distance < minimumDistance) {
                     minimumDistance = distance;
                     nearestDepot = depot;
@@ -196,9 +161,32 @@ public class Main {
             if (nearestDepot == null) {
                 throw new NullPointerException("Nearest Depot is not set");
             }
+
+            nearestDepot.getOrders().add(order);
+
+        }
+    }
+
+    public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
+        Depot nearestDepot = null;
+        for (Order order : orders) {
+            double minimumDistance = Double.MAX_VALUE;
+            for (Depot depot : depots) {
+                    double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance;
+                        nearestDepot = depot;
+                    }
+            }
+
+            if (nearestDepot == null) {
+                throw new NullPointerException("Nearest Depot is not set");
+            }
             nearestDepot.getOrders().add(order);
         }
     }
+
+
 
     public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
         String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";

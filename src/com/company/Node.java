@@ -91,6 +91,14 @@ public class Node {
         this.y = y;
     }
 
+    public int getMatrixIndex() {
+        return matrixIndex;
+    }
+
+    public void setMatrixIndex(int matrixIndex) {
+        this.matrixIndex = matrixIndex;
+    }
+
     @Override
     public String toString() {
         return mapId+"(x: "+x+" y:"+y+")";
