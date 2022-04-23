@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.GA.GeneticAlgorithm;
+import com.company.utils.GraphShortestPath;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -33,19 +34,19 @@ public class Main {
         int nodesNumber= nodes.size();
         //adjacent nodes
         Relationship map[][] = {
-                {new Relationship(0),
-                        new Relationship(-1),
-                        new Relationship(30),
-                        new Relationship(50),
-                        new Relationship(10)},
+                {new Relationship(0,1),
+                        new Relationship(-1,2),
+                        new Relationship(30,3),
+                        new Relationship(50,4),
+                        new Relationship(10,5)},
                 {new Relationship(-1),
-                        new Relationship(0),
-                        new Relationship(-1),
-                        new Relationship(35),
-                        new Relationship(15)},
-                {new Relationship(30),
-                        new Relationship(-1),
-                        new Relationship(0),
+                        new Relationship(0,3),
+                        new Relationship(-1,6),
+                        new Relationship(35,4),
+                        new Relationship(15,7)},
+                {new Relationship(30,2),
+                        new Relationship(-1,4),
+                        new Relationship(0,2),
                         new Relationship(5),
                         new Relationship(35)},
                 {new Relationship(50),
@@ -56,8 +57,8 @@ public class Main {
                 {new Relationship(10),
                         new Relationship(15),
                         new Relationship(40),
-                        new Relationship(0),
-                        new Relationship(20)},
+                        new Relationship(20),
+                        new Relationship(0)},
         };
 //        for(int i=0;i<nodesNumber;i++){
 //            for(int j=0;j< nodesNumber;j++) {
@@ -78,67 +79,70 @@ public class Main {
 //        map.addEdge(d3,off2);
 //        map.addEdge(off1,off2);
 
+      
         System.out.println(map);
+      GraphShortestPath gsp = new GraphShortestPath(map.length);
+      gsp.algo_dijkstra(map,0);
 
-        //parameters
-        final int maxNumberLimaVehicles = 1;
-        final int maxNumberTrujilloVehicles = 1;
-        final int maxNumberArequipaVehicles = 1;
-
-        List<Depot> depots = new ArrayList<>();
-        depots.add(new Depot(d1,"1",40,maxNumberLimaVehicles));
-        depots.add(new Depot(d2,"2",20,maxNumberTrujilloVehicles));
-        depots.add(new Depot(d3,"3",10,maxNumberArequipaVehicles));
-
-
-        List<Order> orders = new ArrayList<>();
-        //orders arrive
-        orders.add(new Order(off1,"1",0,10));
-        orders.add(new Order(off1,"2",0,20));
-        orders.add(new Order(off1,"3",0,15));
-        orders.add(new Order(off1,"4",0,5));
-        orders.add(new Order(off2,"5",0,20));
-
-
-        File file = new File("src/com/company/resources/map01");
-        BufferedReader br = new BufferedReader(new FileReader(file));
-        String line;
-        int index = 0;
-        int depotIndex = 0;
-        int maxVehicles = 0; // m: maximum number of vehicles available in each depot
-        int totalCustomers = 0; // n: total number of customers
-        int depotsCount = 0; // t: number of depots
-        //just reading data
-        while (false &&(line = br.readLine()) != null) {
-            String[] stringLineArr = line.trim().split("\\s+");
-            int[] lineArr = Arrays.stream(stringLineArr).mapToInt(Integer::parseInt).toArray();
-
-            if (index == 0) { // Map info: m n t
-//                System.out.println("Map info: " + line);
-                maxVehicles = lineArr[0];
-                totalCustomers = lineArr[1];
-                depotsCount = lineArr[2];
-            } else if (index <= depotsCount) { // Depot info: The next t lines contain, the following information: D Q
-//                System.out.println("Depot info: " + line);
-                Depot depot = new Depot(lineArr[0], lineArr[1], maxVehicles);
-                depots.add(depot);
-            } else if (index <= depotsCount + totalCustomers) { // Customer: id, x, y, d, q
-//                System.out.println("Customer info: " + line);
-                Order order = new Order(Integer.toString(lineArr[0]), lineArr[1], lineArr[2], lineArr[3], lineArr[4]);
-                orders.add(order);
-            } else if (depotIndex <= depotsCount) { // Depot coordinates: id, x, y
-//                System.out.println("Depot location: " + line);
-                Depot depot = depots.get(depotIndex);
-                depot.setId(Integer.toString(lineArr[0]));
-                depot.setCoordinates(lineArr[1], lineArr[2]);
-                depotIndex++;
-            } else {
-                System.out.println("Oh no, I shouldn't be here!");
-            }
-            index++;
-        }
-
-
+//        //parameters
+//        final int maxNumberLimaVehicles = 1;
+//        final int maxNumberTrujilloVehicles = 1;
+//        final int maxNumberArequipaVehicles = 1;
+//
+//        List<Depot> depots = new ArrayList<>();
+//        depots.add(new Depot(d1,"1",40,maxNumberLimaVehicles));
+//        depots.add(new Depot(d2,"2",20,maxNumberTrujilloVehicles));
+//        depots.add(new Depot(d3,"3",10,maxNumberArequipaVehicles));
+//
+//
+//        List<Order> orders = new ArrayList<>();
+//        //orders arrive
+//        orders.add(new Order(off1,"1",0,10));
+//        orders.add(new Order(off1,"2",0,20));
+//        orders.add(new Order(off1,"3",0,15));
+//        orders.add(new Order(off1,"4",0,5));
+//        orders.add(new Order(off2,"5",0,20));
+//
+//
+//        File file = new File("src/com/company/resources/map01");
+//        BufferedReader br = new BufferedReader(new FileReader(file));
+//        String line;
+//        int index = 0;
+//        int depotIndex = 0;
+//        int maxVehicles = 0; // m: maximum number of vehicles available in each depot
+//        int totalCustomers = 0; // n: total number of customers
+//        int depotsCount = 0; // t: number of depots
+//        //just reading data
+//        while (false &&(line = br.readLine()) != null) {
+//            String[] stringLineArr = line.trim().split("\\s+");
+//            int[] lineArr = Arrays.stream(stringLineArr).mapToInt(Integer::parseInt).toArray();
+//
+//            if (index == 0) { // Map info: m n t
+////                System.out.println("Map info: " + line);
+//                maxVehicles = lineArr[0];
+//                totalCustomers = lineArr[1];
+//                depotsCount = lineArr[2];
+//            } else if (index <= depotsCount) { // Depot info: The next t lines contain, the following information: D Q
+////                System.out.println("Depot info: " + line);
+//                Depot depot = new Depot(lineArr[0], lineArr[1], maxVehicles);
+//                depots.add(depot);
+//            } else if (index <= depotsCount + totalCustomers) { // Customer: id, x, y, d, q
+////                System.out.println("Customer info: " + line);
+//                Order order = new Order(Integer.toString(lineArr[0]), lineArr[1], lineArr[2], lineArr[3], lineArr[4]);
+//                orders.add(order);
+//            } else if (depotIndex <= depotsCount) { // Depot coordinates: id, x, y
+////                System.out.println("Depot location: " + line);
+//                Depot depot = depots.get(depotIndex);
+//                depot.setId(Integer.toString(lineArr[0]));
+//                depot.setCoordinates(lineArr[1], lineArr[2]);
+//                depotIndex++;
+//            } else {
+//                System.out.println("Oh no, I shouldn't be here!");
+//            }
+//            index++;
+//        }
+//
+//
 
 
         //this helps init population of GA

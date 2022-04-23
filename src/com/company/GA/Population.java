@@ -93,6 +93,7 @@ public class Population {
                     parentsToRemove.addAll(List.of(parents[0], parents[1]));
                 }
             }
+            
 
             List<Individual> childrenToAdd = new ArrayList<>();
             for (Individual child : children) {

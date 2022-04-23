@@ -167,7 +167,7 @@ public class Vehicle extends Node {
     public boolean smartAddOrderToRoute(Order orderToAdd, boolean force) {
         double minDuration = Double.MAX_VALUE;
         int minIndex = -1;
-        //we already assigned orders to their nearest depots so now we only care  about vehicle capacity and route(order of orders lol)
+        //we already assigned orders to their nearest depots, so now we only care  about vehicle capacity and route(order of orders lol)
         if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
 //            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
 //            if(allowableLoad>0){
