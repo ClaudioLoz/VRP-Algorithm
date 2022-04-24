@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.utils.Util;
+import com.company.utils.graph.CityNode;
 import com.company.utils.graph.FindPath;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Vehicle extends Node {
     private Depot startDepot;
     private Depot endDepot;
     private int currentLoad = 0;
+    private double currentTime=0.0;
     private List<Order> route = new ArrayList<>();
 
     public  Vehicle(Depot depot) {
@@ -27,8 +29,12 @@ public class Vehicle extends Node {
         this.startDepot = depot;
         this.endDepot = depot;
         this.route = route;
-        for (Order order : route) {
+        for (int i=0;i <route.size()-1;i++) {
+            Order order= route.get(i);
             this.currentLoad += order.getLoadDemand();
+            if(i==0) this.currentTime+= FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
+            else if(i==route.size()-1)this.currentTime+= FindPath.calculateShortestPath(GRAPH, order.getCity(),endDepot.getCity());
+            else this.currentTime+= FindPath.calculateShortestPath(GRAPH, order.getCity(),route.get(i+1).getCity());
         }
     }
 
@@ -36,30 +42,13 @@ public class Vehicle extends Node {
         super(startDepot.getX1(), startDepot.getY1());
         this.startDepot = startDepot;
         this.endDepot = endDepot;
-        this.route = route;
-        for (Order order : route) {
+        for (int i=0;i <route.size();i++) {
+            Order order= route.get(i);
             this.currentLoad += order.getLoadDemand();
+            if(i==0) this.currentTime+= FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
+            else if(i==route.size()-1)this.currentTime+= FindPath.calculateShortestPath(GRAPH, order.getCity(),endDepot.getCity());
+            else this.currentTime+= FindPath.calculateShortestPath(GRAPH, order.getCity(),route.get(i+1).getCity());
         }
-    }
-
-
-
-    public int getLoadIfOrderAdded(Order order) {
-        return currentLoad + order.getLoadDemand();
-    }
-
-    public int getLoadIfRouteAdded(List<Order> route) {
-        return currentLoad + getRouteLoad(route);
-    }
-
-    private int getRouteLoad(List<Order> route) {
-        int routeLoad = 0;
-
-        for (Order order : route) {
-            routeLoad += order.getLoadDemand();
-        }
-
-        return routeLoad;
     }
 
     public double calculateRouteDuration() {
@@ -141,20 +130,66 @@ public class Vehicle extends Node {
     }
 
 
-    public boolean addOrderToRoute(Order order) {
+    public boolean addOrderToRoute(Order order) { //1st order
         route.add(order);
         currentLoad += order.getLoadDemand();
+        currentTime+= FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
         return true;
     }
 
     public void addOrderToRoute(int index, Order order) {
         route.add(index, order);
         currentLoad += order.getLoadDemand();
+        CityNode cityBefore=null;
+        if(index>0) cityBefore=route.get(index-1).getCity();
+        CityNode cityAfter= null;
+        if(index<route.size()-1)cityAfter= route.get(index+1).getCity();
+
+        if(cityBefore==null){
+            currentTime+=FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
+            if(cityAfter!=null)
+                currentTime-=FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), cityAfter);
+        }
+        if(cityAfter==null){
+            currentTime+=FindPath.calculateShortestPath(GRAPH, order.getCity(), endDepot.getCity());
+            if(cityBefore!=null)
+                currentTime-=FindPath.calculateShortestPath(GRAPH,cityBefore, endDepot.getCity());
+        }
+        if(cityAfter!=null)
+            currentTime += FindPath.calculateShortestPath(GRAPH, cityAfter, order.getCity());
+        if(cityBefore!=null)
+            currentTime += FindPath.calculateShortestPath(GRAPH, cityBefore, order.getCity());
+        if(cityAfter != null && cityBefore != null) {
+            currentTime -= FindPath.calculateShortestPath(GRAPH, cityBefore, cityAfter);
+        }
     }
 
     public void removeOrderFromRoute(Order order) {
+        int routeIndex= route.indexOf(order);
+        CityNode cityBefore=null;
+        if(routeIndex>0) cityBefore=route.get(routeIndex-1).getCity();
+        CityNode cityAfter= null;
+        if(routeIndex<route.size()-1)cityAfter= route.get(routeIndex+1).getCity();
         route.remove(order);
         currentLoad -= order.getLoadDemand();
+
+        if(cityBefore==null){
+            currentTime-=FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
+            if(cityAfter!=null)
+                currentTime+=FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), cityAfter);
+        }
+        if(cityAfter==null){
+            currentTime-=FindPath.calculateShortestPath(GRAPH, order.getCity(), endDepot.getCity());
+            if(cityBefore!=null)
+                currentTime+=FindPath.calculateShortestPath(GRAPH,cityBefore, endDepot.getCity());
+        }
+        if(cityAfter!=null)
+            currentTime -= FindPath.calculateShortestPath(GRAPH, cityAfter, order.getCity());
+        if(cityBefore!=null)
+            currentTime -= FindPath.calculateShortestPath(GRAPH, cityBefore, order.getCity());
+        if(cityAfter != null && cityBefore != null) {
+            currentTime += FindPath.calculateShortestPath(GRAPH, cityBefore, cityAfter);
+        }
     }
 
     @Override
@@ -164,18 +199,24 @@ public class Vehicle extends Node {
     }
 
     public void addOtherRouteToRoute(int index, List<Order> otherRoute) {
-        for (Order c : otherRoute) {
-            currentLoad += c.getLoadDemand();
+
+        for(int i=index;i < index + otherRoute.size();i++){
+            addOrderToRoute(i,otherRoute.get(i-index));
         }
 
-        route.addAll(index, otherRoute);
+    }
+
+
+    public boolean doesNotMeetConstraints (Order orderToAdd){
+        return ( (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad())
+                && (currentTime +  FindPath.calculateShortestPath(GRAPH, route.get(route.size()-1).getCity(), orderToAdd.getCity())) >orderToAdd.getMaximumTime());
     }
 
     public boolean smartAddOrderToRoute(Order orderToAdd, boolean force) {
         double minDuration = Double.MAX_VALUE;
         int minIndex = -1;
         //we already assigned orders to their nearest depots, so now we only care  about vehicle capacity and route(order of orders lol)
-        if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
+        if (doesNotMeetConstraints(orderToAdd) && !force) {
 //            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
 //            if(allowableLoad>0){
 //                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
@@ -189,6 +230,7 @@ public class Vehicle extends Node {
             addOrderToRoute(orderToAdd);
             return true;
         } else {
+
             for (int i = 0; i < route.size(); i++) {
                 double duration = calculateRouteDurationIfOrderAdded(i, orderToAdd);
                 if (duration < minDuration) {
@@ -204,10 +246,9 @@ public class Vehicle extends Node {
 
     public void removeRouteFromRoute(List<Order> otherRoute) {
         for (Order c : otherRoute) {
-            currentLoad -= c.getLoadDemand();
+            removeOrderFromRoute(c);
         }
 
-        route.removeAll(otherRoute);
     }
 
     public Depot getStartDepot() {
@@ -232,6 +273,14 @@ public class Vehicle extends Node {
 
     public void setCurrentLoad(int currentLoad) {
         this.currentLoad = currentLoad;
+    }
+
+    public double getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(double currentTime) {
+        this.currentTime = currentTime;
     }
 
     public List<Order> getRoute() {

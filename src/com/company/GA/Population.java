@@ -77,6 +77,7 @@ public class Population {
             generateInitialPopulation();
             individuals.sort(Comparator.comparingDouble(Individual::getFitness));
         } else {
+
             List<Individual> children = new ArrayList<>();
             List<Individual> parentsToRemove = new ArrayList<>();
             for (int i = 0; i < numberOfChildren; i++) {

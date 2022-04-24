@@ -5,6 +5,7 @@ import com.company.utils.graph.CityNode;
 public class Order extends Node{
     private String id; // i: order number
     private int timeDemand;
+    private double maximumTime=Double.MAX_VALUE;
     private int loadDemand;
 
     public Order(Node node, String id, int timeDemand, int loadDemand) {
@@ -73,5 +74,13 @@ public class Order extends Node{
 
     public void setLoadDemand(int loadDemand) {
         this.loadDemand = loadDemand;
+    }
+
+    public double getMaximumTime() {
+        return maximumTime;
+    }
+
+    public void setMaximumTime(double maximumTime) {
+        this.maximumTime = maximumTime;
     }
 }
