@@ -135,6 +135,8 @@ public class Main {
         System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
         int z=0;
         for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
+          if(vehicle.calculateRouteDuration()<=0)
+            continue;
             System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
             z++;
         }
