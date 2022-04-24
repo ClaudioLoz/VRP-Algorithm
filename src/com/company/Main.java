@@ -26,50 +26,21 @@ public class Main {
     Node off1 = new Node("010101", -6.22940827, -77.8724339, 3);
     Node off2 = new Node("010301", -5.90432416, -77.79809916, 4);
 
-        nodes.add(d1);
-        nodes.add(d2);
-        nodes.add(d3);
-        nodes.add(off1);
-        nodes.add(off2);
-        int nodesNumber= nodes.size();
+    nodes.add(d1);
+    nodes.add(d2);
+    nodes.add(d3);
+    nodes.add(off1);
+    nodes.add(off2);
+    int nodesNumber= nodes.size();
         
     //adjacent nodes
-    Relationship map[][] = {
-        {new Relationship(0, 1),
-            new Relationship(-1, 2),
-            new Relationship(30, 3),
-            new Relationship(50, 4),
-            new Relationship(10, 5)},
-        {new Relationship(-1),
-            new Relationship(0, 3),
-            new Relationship(-1, 6),
-            new Relationship(35, 4),
-            new Relationship(15, 7)},
-        {new Relationship(30, 2),
-            new Relationship(-1, 4),
-            new Relationship(0, 2),
-            new Relationship(5),
-            new Relationship(35)},
-        {new Relationship(50),
-            new Relationship(35),
-            new Relationship(5),
-            new Relationship(0),
-            new Relationship(20)},
-        {new Relationship(10),
-            new Relationship(15),
-            new Relationship(40),
-            new Relationship(20),
-            new Relationship(0)},
-    
-    };
-
     Set<CityNode> cities = new HashSet<>();
     CityNode a = new CityNode("A");
     CityNode b = new CityNode("B");
     CityNode c = new CityNode("C");
     CityNode d = new CityNode("D");
     CityNode e = new CityNode("E");
-      CityNode f = new CityNode("F");
+    CityNode f = new CityNode("F");
       
     cities.addAll(List.of(a,b,c,d,e,f));
 //    cities.addAll(List.of(a,b,c,d,e));
@@ -80,24 +51,7 @@ public class Main {
 
     FindPath findPath = new FindPath();
     System.out.println(FindPath.calculateShortestPath(GRAPH, a, e)); //prints 140 as expected
-    
-    
-//        for(int i=0;i<nodesNumber;i++){
-//            for(int j=0;j< nodesNumber;j++) {
-//                map[i][j]=new Relationship(nodes.get(i),nodes.get(j));
-//            }
-//        }
 
-
-    //maybe for REAL routes we need a graph in linkedList implementation
-//        //adjacent nodes of each node bidirectionally
-//        map.addEdge(d1,off1);
-//        map.addEdge(d1,off2);
-//        map.addEdge(d2,off1);
-//        map.addEdge(d2,off2);
-//        map.addEdge(d3,off1);
-//        map.addEdge(d3,off2);
-//        map.addEdge(off1,off2);
 
 
 //    System.out.println(map);
@@ -125,7 +79,7 @@ public class Main {
 //        orders.add(new Order(off1,"4",0,5,e));
 //        orders.add(new Order(off2,"5",0,20,d));
 //
-//
+
 //        File file = new File("src/com/company/resources/map01");
 //        BufferedReader br = new BufferedReader(new FileReader(file));
 //        String line;
@@ -170,13 +124,10 @@ public class Main {
     //this helps init population of GA
         assignOrdersToNearestDepot2(orders,depots);
 
-        //this helps init population of GA
-//        assignOrdersToNearestDepot2(orders,depots);
+
         depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
             depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
         GeneticAlgorithm ga = new GeneticAlgorithm(depots);
-        
-        
         ga.run();
 
 
