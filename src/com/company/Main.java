@@ -124,7 +124,6 @@ public class Main {
     //this helps init population of GA
         assignOrdersToNearestDepot2(orders,depots);
 
-
         depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
             depot.getOrders().stream().forEach(order -> System.out.println(order.getMapId() + " "));});
         GeneticAlgorithm ga = new GeneticAlgorithm(depots);
@@ -185,7 +184,7 @@ public class Main {
 
 
     public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
-        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  distancia:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
+        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  tiempo:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
         for (Order order : route) {
             output += order.getId() + " ";
         }

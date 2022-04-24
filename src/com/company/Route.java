@@ -1,21 +1,19 @@
 package com.company;
 
-import static com.company.utils.Util.euclideanDistance;
-
-public class Relationship {
+public class Route {
     private double distance;
     private double speed;
     
-    public Relationship( double distance) {
+    public Route(double distance) {
         this.distance = distance;
     }
 
-  public Relationship(double distance, double speed) {
+  public Route(double distance, double speed) {
     this.distance = distance;
     this.speed = speed;
   }
 
-  public Relationship( ) {
+  public Route( ) {
         
     }
 

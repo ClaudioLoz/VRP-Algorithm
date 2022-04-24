@@ -6,10 +6,10 @@ public class FindPath{
 
   //map to hold distances of all node from origin. at the end this map should contain
   //the shortest distance between origin (from) to all other nodes
-  static Map<CityNode, Integer> distances;
+  static Map<CityNode, Double> time;
 
   //using Dijkstra algorithm
-  public static int calculateShortestPath(CitiesGraph graph, CityNode from, CityNode to) {
+  public static Double calculateShortestPath(CitiesGraph graph, CityNode from, CityNode to) {
 
     //a container to hold which cities the algorithm has visited
     Set<CityNode> settledCities = new HashSet<>();
@@ -19,12 +19,12 @@ public class FindPath{
 
     //map to hold distances of all node from origin. at the end this map should contain
     //the shortest distance between origin (from) to all other nodes
-    distances = new HashMap<>();
+    time = new HashMap<>();
     //initialize map with values: 0 distance to origin, infinite distance to all others
     //infinite means no connection between nodes
     for(CityNode city :graph.getCities()){
-      int distance = city.equals(from) ? 0 : Integer.MAX_VALUE;
-      distances.put(city, distance);
+      double distance = city.equals(from) ? 0 : Double.MAX_VALUE;
+      time.put(city, distance);
     }
 
     while (unsettledCities.size() != 0) {
@@ -37,13 +37,13 @@ public class FindPath{
       //iterate over connected city to update distance to each
       for( CityNode city : connectedCities){
         //check if new distance is shorted than the previously found distance
-        int distanceToCity = graph.getDistanceBetween(city, currentCity);
-        if(distanceToCity <= 0) {
+        double timeCity = graph.getTimeBetween(city, currentCity);
+        if(timeCity <= 0) {
           continue;
         }
-        if(distances.get(currentCity) + distanceToCity < distances.get(city)){
+        if(time.get(currentCity) + timeCity < time.get(city)){
           //if so, keep the shortest distance found
-          distances.put(city,distances.get(currentCity) + distanceToCity);
+          time.put(city, time.get(currentCity) + timeCity);
           //if city has not been visited yet, add it to unsettledCities
           if(! settledCities.contains(city)) {
             unsettledCities.add(city);
@@ -52,13 +52,13 @@ public class FindPath{
       }
     }
 
-    return distances.get(to);
+    return time.get(to);
   }
 
   private static  CityNode getLowestDistanceCity(Set <CityNode> unsettledCities) {
 
     return unsettledCities.stream()
-        .min((c1,c2)-> Integer.compare(distances.get(c1), distances.get(c2)))
+        .min((c1,c2)-> Double.compare(time.get(c1), time.get(c2)))
         .orElse(null);
   }
 }
