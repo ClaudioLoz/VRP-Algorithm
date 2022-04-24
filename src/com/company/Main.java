@@ -61,9 +61,9 @@ public class Main {
 //    System.out.println("distancia minima entre 0 y 4 es: " + gsp.minimumDistanceBetweenTwoNodes(map, 0, 4));
 
         //parameters
-        final int maxNumberLimaVehicles = 1;
-        final int maxNumberTrujilloVehicles = 1;
-        final int maxNumberArequipaVehicles = 1;
+        final int maxNumberLimaVehicles = 2;
+        final int maxNumberTrujilloVehicles = 2;
+        final int maxNumberArequipaVehicles = 2;
 
         List<Depot> depots = new ArrayList<>();
         depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles, a));

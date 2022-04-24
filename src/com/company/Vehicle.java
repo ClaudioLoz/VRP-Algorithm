@@ -1,6 +1,7 @@
 package com.company;
 
 import com.company.utils.Util;
+import com.company.utils.graph.CityNode;
 import com.company.utils.graph.FindPath;
 
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class Vehicle extends Node {
 //            duration += copy.get(i + 1).getTimeDemand();
       }
 //        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
-      routeDistance += FindPath.calculateShortestPath(GRAPH,route.get(route.size()-1).getCity(),endDepot.getCity());
+      //routeDistance += FindPath.calculateShortestPath(GRAPH,route.get(route.size()-1).getCity(),endDepot.getCity());
         return routeDistance;
     }
 
@@ -98,7 +99,7 @@ public class Vehicle extends Node {
 //            duration += copy.get(i + 1).getTimeDemand();
         }
 //        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
-      duration += FindPath.calculateShortestPath(GRAPH,copy.get(copy.size()-1).getCity(),endDepot.getCity());
+      //duration += FindPath.calculateShortestPath(GRAPH,copy.get(copy.size()-1).getCity(),endDepot.getCity());
       return duration;
     }
 
@@ -170,12 +171,16 @@ public class Vehicle extends Node {
 
         route.addAll(index, otherRoute);
     }
+    
+    
 
     public boolean smartAddOrderToRoute(Order orderToAdd, boolean force) {
         double minDuration = Double.MAX_VALUE;
         int minIndex = -1;
         //we already assigned orders to their nearest depots, so now we only care  about vehicle capacity and route(order of orders lol)
-        if (currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad() && !force) {
+      double currentTime=getCurrentTime();
+      CityNode city = route.size() == 0 ? startDepot.getCity() : route.get(route.size()-1).getCity();
+        if ((currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad())   && !force) {
 //            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
 //            if(allowableLoad>0){
 //                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
@@ -184,8 +189,12 @@ public class Vehicle extends Node {
 //                System.out.println(orderToAdd.getLoadDemand());
 //                addOrderToRoute(orderToAdd);
 //            }
-            return false;
-        } else if (route.size() == 0) {
+          return false;
+        }
+        else if( (currentTime +  FindPath.calculateShortestPath(GRAPH, city, orderToAdd.getCity())) > 25 && !force){
+          return false;
+        }
+        else if (route.size() == 0) {
             addOrderToRoute(orderToAdd);
             return true;
         } else {
@@ -202,7 +211,21 @@ public class Vehicle extends Node {
         }
     }
 
-    public void removeRouteFromRoute(List<Order> otherRoute) {
+  private double getCurrentTime() {
+    double currentTime=0;
+    if(route.size()==0)
+      return 0;
+    for (int i=0;i <route.size();i++) {
+      Order order= route.get(i);
+      if(i==0) currentTime+= FindPath.calculateShortestPath(GRAPH, startDepot.getCity(), order.getCity());
+      //else if(i==route.size()-1)return currentTime+ FindPath.calculateShortestPath(GRAPH, order.getCity(), endDepot.getCity());
+      else if(i==route.size()-1)return currentTime;
+      else currentTime+= FindPath.calculateShortestPath(GRAPH, order.getCity(),route.get(i+1).getCity());
+    }
+    return currentTime;
+  }
+
+  public void removeRouteFromRoute(List<Order> otherRoute) {
         for (Order c : otherRoute) {
             currentLoad -= c.getLoadDemand();
         }
