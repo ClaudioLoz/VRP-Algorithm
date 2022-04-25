@@ -32,4 +32,9 @@ public class Route {
   public void setSpeed(double speed) {
     this.speed = speed;
   }
+
+  @Override
+  public String toString() {
+    return speed != 0 ? Double.toString(distance/speed) : "0";
+  }
 }
