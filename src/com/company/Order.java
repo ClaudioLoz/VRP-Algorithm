@@ -47,6 +47,12 @@ public class Order extends Node{
         this.loadDemand = loadDemand;
     }
 
+    @Override
+    protected Order clone()  {
+        Order order= new Order(new Node(this.getMapId(),this.getX(),this.getY(),this.getCity()),this.getId(),this.timeDemand,this.loadDemand,this.getCity());
+        return order;
+    }
+
     public Order(int x, int y) {
         super(x, y);
     }
@@ -73,5 +79,11 @@ public class Order extends Node{
 
     public void setLoadDemand(int loadDemand) {
         this.loadDemand = loadDemand;
+    }
+
+
+    @Override
+    public String toString() {
+        return id+" cantidad de paquetes: "+ loadDemand;
     }
 }

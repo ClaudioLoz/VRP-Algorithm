@@ -51,14 +51,14 @@ public class Main {
     
 
         //parameters
-        final int maxNumberLimaVehicles = 2;
-        final int maxNumberTrujilloVehicles = 2;
-        final int maxNumberArequipaVehicles = 2;
+        final int maxNumberLimaVehicles = 10;
+        final int maxNumberTrujilloVehicles = 10;
+        final int maxNumberArequipaVehicles = 10;
 
         List<Depot> depots = new ArrayList<>();
-        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles,a));
-        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, f));
-        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, e));
+        depots.add(new Depot(d1,"a",30,maxNumberLimaVehicles,a));
+        depots.add(new Depot(d2,"f",30,maxNumberTrujilloVehicles, f));
+        depots.add(new Depot(d3,"e",30,maxNumberArequipaVehicles, e));
         List<Order> orders = new ArrayList<>();
         //orders arrive
         orders.add(new Order(off1,"b",0,10, b));
@@ -91,8 +91,7 @@ public class Main {
         System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
         int z=0;
         for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
-          if(vehicle.calculateRouteDuration()<=0)
-            continue;
+            if(vehicle.calculateRouteDuration()<=0) continue;
             System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
             z++;
         }
@@ -176,7 +175,7 @@ public class Main {
 
 
     public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
-        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  tiempo:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
+        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  tiempo:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n orden de oficinas a atender: ";
         for (Order order : route) {
             output += order.getId() + " ";
         }

@@ -10,7 +10,7 @@ import java.util.List;
 
 import static com.company.utils.MockGraph.GRAPH;
 
-public class Vehicle extends Node {
+public class Vehicle {
     private String id;
     private Depot startDepot;
     private Depot endDepot;
@@ -18,13 +18,11 @@ public class Vehicle extends Node {
     private List<Order> route = new ArrayList<>();
 
     public  Vehicle(Depot depot) {
-        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
     }
 
     public Vehicle(Depot depot, List<Order> route) {
-        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
         this.route = route;
@@ -34,7 +32,6 @@ public class Vehicle extends Node {
     }
 
     public Vehicle(Depot startDepot, Depot endDepot, List<Order> route) {
-        super(startDepot.getX1(), startDepot.getY1());
         this.startDepot = startDepot;
         this.endDepot = endDepot;
         this.route = route;
@@ -90,6 +87,7 @@ public class Vehicle extends Node {
         double duration = 0.0;
         List<Order> copy = new ArrayList<>(route);
         copy.add(index, orderToCheck);
+//        copy.stream().forEach(order -> System.out.println("vehiculo:"+this+" "+order+"con i:"+ index));
 
         duration += FindPath.calculateShortestPath(GRAPH,startDepot.getCity(),copy.get(0).getCity() ); //start depot to first order
 //        duration += copy.get(0).getTimeDemand();//time in that order ( 1 hour) so it have to be changed maybe with a speed factor
@@ -181,14 +179,29 @@ public class Vehicle extends Node {
       double currentTime=getCurrentTime();
       CityNode city = route.size() == 0 ? startDepot.getCity() : route.get(route.size()-1).getCity();
         if ((currentLoad + orderToAdd.getLoadDemand() > startDepot.getMaxLoad())   && !force) {
-//            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
-//            if(allowableLoad>0){
-//                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
-//                System.out.println(this+" "+currentLoad+" "+allowableLoad);
-//                orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
-//                System.out.println(orderToAdd.getLoadDemand());
-//                addOrderToRoute(orderToAdd);
-//            }
+            int allowableLoad = startDepot.getMaxLoad()-currentLoad;// for partial deliveries
+            if(allowableLoad>0 && (currentTime +  FindPath.calculateShortestPath(GRAPH, city, orderToAdd.getCity())) <= 25&& !force){
+                System.out.println(force);
+                System.out.println("Pedido original: "+ orderToAdd.getId()+" "+orderToAdd.getLoadDemand());
+                System.out.println(this+" cantidad de paquetes actual:"+currentLoad+" \npaquetes posibles recibir:"+allowableLoad);
+                Order childOrder= orderToAdd.clone();
+                orderToAdd.setLoadDemand(orderToAdd.getLoadDemand()-allowableLoad);
+                System.out.println("cantidad de paquetes que faltan ser atendidos en la orden hecha parcial:"+orderToAdd.getLoadDemand());
+                childOrder.setLoadDemand(allowableLoad);
+                System.out.println("entrega parcial creada: "+childOrder);
+                if (route.size() == 0) {
+                    addOrderToRoute(childOrder);
+                } else {
+                    for (int i = 0; i < route.size(); i++) {
+                        double duration = calculateRouteDurationIfOrderAdded(i, childOrder);
+                        if (duration < minDuration) {
+                            minDuration = duration;
+                            minIndex = i;
+                        }
+                    }
+                    addOrderToRoute(minIndex, childOrder);
+                }
+            }
           return false;
         }
         else if( (currentTime +  FindPath.calculateShortestPath(GRAPH, city, orderToAdd.getCity())) > 25 && !force){

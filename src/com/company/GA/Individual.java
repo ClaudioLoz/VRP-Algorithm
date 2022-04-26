@@ -116,7 +116,7 @@ public class Individual {
                     Vehicle randomVehicle = depotVehicles.get(randomIndex);
 
                     orderAdded = randomVehicle.smartAddOrderToRoute(order, force);
-
+//                    System.out.println(order+" " +orderAdded+" " +triesLeft);
                     if (!orderAdded) {
                         triesLeft--;
                     }

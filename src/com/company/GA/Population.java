@@ -10,6 +10,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.company.Main.formatOutputLine;
+
 /*
  * n Solutions = populationSize
  */
@@ -75,6 +77,15 @@ public class Population {
         if (generation == 0) {
             //0. Init population
             generateInitialPopulation();
+//            int z=0;
+//            for (Individual individual: individuals) {
+//                System.out.println("Solution:");
+//                for (Vehicle vehicle : individual.getVehicles()) {
+//                    if (vehicle.calculateRouteDuration() <= 0) continue;
+//                    System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(), z + 1, vehicle.calculateRouteDuration(), vehicle.getCurrentLoad(), vehicle.getRoute()));
+//                    z++;
+//                }
+//            }
             individuals.sort(Comparator.comparingDouble(Individual::getFitness));
         } else {
             List<Individual> children = new ArrayList<>();
