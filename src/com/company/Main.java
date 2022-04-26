@@ -30,24 +30,24 @@ public class Main {
 //    int nodesNumber= nodes.size();
 //    
 //    //adjacent nodes
-//    Set<CityNode> cities = new HashSet<>();
-//    CityNode a = new CityNode("A");
-//    CityNode b = new CityNode("B");
-//    CityNode c = new CityNode("C");
-//    CityNode d = new CityNode("D");
-//    CityNode e = new CityNode("E");
-//    CityNode f = new CityNode("F");
-//      
-//    cities.addAll(List.of(a,b,c,d,e,f));
-////    cities.addAll(List.of(a,b,c,d,e));
-//    
-//      initMockGraph(a,b,c,d,e,f);
-////      initMockGraph(a,b,c,d,e);
+    Set<CityNode> cities = new HashSet<>();
+    CityNode a = new CityNode("A");
+    CityNode b = new CityNode("B");
+    CityNode c = new CityNode("C");
+    CityNode d = new CityNode("D");
+    CityNode e = new CityNode("E");
+    CityNode f = new CityNode("F");
+////      
+    cities.addAll(List.of(a,b,c,d,e,f));
+//    cities.addAll(List.of(a,b,c,d,e));
+
+      initMockGraph(a,b,c,d,e,f);
+//      initMockGraph(a,b,c,d,e);
 //    
 //
     //Read txt file 
-    List<CityNode> cities = readFile();
-//    GRAPH.show();
+//    List<CityNode> cities = readFile();
+    GRAPH.show();
     
 
         //parameters
@@ -56,19 +56,29 @@ public class Main {
         final int maxNumberArequipaVehicles = 2;
 
         List<Depot> depots = new ArrayList<>();
-        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles, cities.get(0)));
-        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, cities.get(1)));
-        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, cities.get(2)));
-//
-//
+        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles,a));
+        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, f));
+        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, e));
         List<Order> orders = new ArrayList<>();
         //orders arrive
-        orders.add(new Order(off1,"b",0,10, cities.get(23)));
-        orders.add(new Order(off1,"c",0,20, cities.get(47)));
-        orders.add(new Order(off1,"d",0,15,cities.get(19)));
-        orders.add(new Order(off1,"4",0,5,cities.get(7)));
-        orders.add(new Order(off2,"5",0,20,cities.get(33)));
-        
+        orders.add(new Order(off1,"b",0,10, b));
+        orders.add(new Order(off1,"c",0,20, c));
+        orders.add(new Order(off1,"d",0,15,d));
+//        orders.add(new Order(off1,"4",0,5,f));
+//        orders.add(new Order(off2,"5",0,20,cities.get(33)));
+
+//        List<Depot> depots = new ArrayList<>();
+//        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles, cities.get(0)));
+//        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, cities.get(1)));
+//        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, cities.get(2)));
+//        List<Order> orders = new ArrayList<>();
+//        //orders arrive
+//        orders.add(new Order(off1,"b",0,10, cities.get(23)));
+//        orders.add(new Order(off1,"c",0,20, cities.get(47)));
+//        orders.add(new Order(off1,"d",0,15,cities.get(19)));
+//        orders.add(new Order(off1,"4",0,5,cities.get(7)));
+//        orders.add(new Order(off2,"5",0,20,cities.get(33)));
+//        
         assignOrdersToNearestDepot2(orders,depots);
 
         depots.stream().forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
