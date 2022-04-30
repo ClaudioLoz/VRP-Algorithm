@@ -3,15 +3,15 @@ package com.company;
 import com.company.utils.Util;
 import com.company.utils.graph.CityNode;
 import com.company.utils.graph.FindPath;
+import jdk.swing.interop.SwingInterOpUtils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import static com.company.utils.MockGraph.GRAPH;
 
 public class Vehicle extends Node {
-    private String id;
+    private static int counter =0;
+    private final int id = counter ++;
     private Depot startDepot;
     private Depot endDepot;
     private int currentLoad = 0;
@@ -71,10 +71,11 @@ public class Vehicle extends Node {
         }
 
       routeDistance += FindPath.calculateShortestPath(GRAPH,startDepot.getCity(),route.get(0).getCity() ); //start depot to first order
-//        duration += copy.get(0).getTimeDemand();//time in that order ( 1 hour) so it have to be changed maybe with a speed factor
       for (int i = 0; i < route.size() - 1; i++) {
 //            duration += copy.get(i).distance(copy.get(i + 1));
         routeDistance += FindPath.calculateShortestPath(GRAPH,route.get(i).getCity(), route.get(i+1).getCity() );
+          routeDistance++;
+
 //            duration += copy.get(i + 1).getTimeDemand();
       }
 //        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
@@ -96,6 +97,7 @@ public class Vehicle extends Node {
         for (int i = 0; i < copy.size() - 1; i++) {
 //            duration += copy.get(i).distance(copy.get(i + 1));
             duration += FindPath.calculateShortestPath(GRAPH,copy.get(i).getCity(), copy.get(i+1).getCity() );
+            duration++;
 //            duration += copy.get(i + 1).getTimeDemand();
         }
 //        duration += copy.get(copy.size() - 1).distance(endDepot); //end order to end depot
@@ -191,7 +193,7 @@ public class Vehicle extends Node {
 //            }
           return false;
         }
-        else if( (currentTime +  FindPath.calculateShortestPath(GRAPH, city, orderToAdd.getCity())) > 25 && !force){
+        else if( (currentTime +  FindPath.calculateShortestPath(GRAPH, city, orderToAdd.getCity())) > orderToAdd.getCity().getMaximumTime()&& !force){
           return false;
         }
         else if (route.size() == 0) {
@@ -265,11 +267,23 @@ public class Vehicle extends Node {
         this.route = route;
     }
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        String output = "ID almacen:" + startDepot.getId() + "  ID vehiculo:" + id + "  tiempo:" + String.format(Locale.ROOT, "%.2f", calculateRouteDuration()) + "  carga:" + currentLoad+ "\n ruta de entrega en oficinas: ";
+  //      output+= FindPath.getNodesBetweenTwoCities(GRAPH,startDepot.getCity(),route.get(0).getCity());
+        List<CityNode> lista=FindPath.getNodesBetweenTwoCities(GRAPH,startDepot.getCity(),route.get(0).getCity());
+        lista.remove(lista.size()-1);
+        for (int i =0; i<route.size()-1;i++) {
+            lista.addAll(FindPath.getNodesBetweenTwoCities(GRAPH,route.get(i).getCity(),route.get(i+1).getCity()));
+            lista.remove(lista.size()-1);
+//            output+= FindPath.getNodesBetweenTwoCities(GRAPH,route.get(i).getCity(),route.get(i+1).getCity());
+        }
+    //    output+= FindPath.getNodesBetweenTwoCities(GRAPH,route.get(route.size()-1).getCity(),endDepot.getCity());
+        lista.addAll(FindPath.getNodesBetweenTwoCities(GRAPH,route.get(route.size()-1).getCity(),endDepot.getCity()));
+        return output + lista.toString();
     }
 }

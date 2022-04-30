@@ -8,13 +8,24 @@ public class CityNode extends Node {
   private final String name;
   //assign unique id to each node. safer than to rely on unique name
   private final int id = counter ++;
+  private  double maximumTime;
+
+
+
+  public CityNode(String name, double maximumTime) {
+    this.name = name;
+    this.maximumTime= maximumTime;
+  }
 
   public CityNode(String name) {
     this.name = name;
   }
-
   public String getName() {
     return name;
+  }
+
+  public double getMaximumTime() {
+    return maximumTime;
   }
 
   @Override

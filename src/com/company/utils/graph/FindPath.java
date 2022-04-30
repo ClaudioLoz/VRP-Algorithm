@@ -27,7 +27,7 @@ public class FindPath{
       double distance = city.equals(from) ? 0 : Double.MAX_VALUE;
       timeMap.put(city, distance);
     }
-
+    int extra=0;
     while (unsettledCities.size() != 0) {
       //get the unvisited city with the lowest distance
       CityNode currentCity = getLowestDistanceCity(unsettledCities);
@@ -44,7 +44,10 @@ public class FindPath{
         }
         if(timeMap.get(currentCity) + timeCity < timeMap.get(city)){
           //if so, keep the shortest distance found
-          timeMap.put(city, timeMap.get(currentCity) + timeCity);
+          extra = 0;
+          if( !graph.areAdjacent(from, city))
+            extra = 1;
+          timeMap.put(city, timeMap.get(currentCity) + timeCity + extra);
           //if city has not been visited yet, add it to unsettledCities
           if(! settledCities.contains(city)) {
             unsettledCities.add(city);
@@ -62,6 +65,7 @@ public class FindPath{
     Set<CityNode> unsettledCities = new HashSet<>();
     unsettledCities.add(from);
     timeMap = new HashMap<>();
+    nodeMap = new HashMap<>();
     for(CityNode city :graph.getCities()){
       double time = city.equals(from) ? 0 : Double.MAX_VALUE;
       nodeMap.put(city, new ArrayList<>());
@@ -78,7 +82,9 @@ public class FindPath{
           continue;
         }
         if(timeMap.get(currentCity) + timeCity < timeMap.get(city)){
-          nodeMap.get(city).add(currentCity);
+          List<CityNode> node=new ArrayList<CityNode>(nodeMap.get(currentCity));
+          node.add(currentCity);
+          nodeMap.put(city, node);
           timeMap.put(city, timeMap.get(currentCity) + timeCity);
           if(! settledCities.contains(city)) {
             unsettledCities.add(city);
@@ -86,7 +92,7 @@ public class FindPath{
         }
       }
     }
-
+    nodeMap.get(to).add(to);
     return nodeMap.get(to);
   }
 

@@ -130,6 +130,10 @@ public class Population {
             individuals = individuals.stream().limit(populationSize).collect(Collectors.toList()); // Cut population to population size
         }
         alphaIndividual = individuals.get(0);//the best is the one that has the minimum fitness
+        for(Vehicle vehicle: alphaIndividual.getVehicles()){
+            alphaIndividual.setBestEndDepot(vehicle);
+        }
+
         generations.add(getAlphaFitness());
         generation++;
     }

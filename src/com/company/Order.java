@@ -7,6 +7,7 @@ public class Order extends Node{
     private int timeDemand;
     private int loadDemand;
 
+
     public Order(Node node, String id, int timeDemand, int loadDemand) {
         super(node.getMapId(), node.getX(), node.getY(),node.getMatrixIndex());
         this.id=id;

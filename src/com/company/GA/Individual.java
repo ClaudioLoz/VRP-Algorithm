@@ -4,10 +4,13 @@ import com.company.Depot;
 import com.company.Order;
 import com.company.Vehicle;
 import com.company.utils.Util;
+import com.company.utils.graph.FindPath;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static com.company.utils.MockGraph.GRAPH;
 
 public class Individual {
 
@@ -357,12 +360,12 @@ public class Individual {
         }
     }
 
-    private void setBestEndDepot(Vehicle vehicle) {
+    public void setBestEndDepot(Vehicle vehicle) {
         if (vehicle.getRoute().size() > 0) {
             double currentMinDistance = Double.MAX_VALUE;
             Depot currentBestEndDepot = null;
             for (Depot depot : depots) {
-                double distance = depot.distance(vehicle.getRoute().get(vehicle.getRoute().size() - 1));
+                double distance = FindPath.calculateShortestPath(GRAPH, depot.getCity(), vehicle.getRoute().get( vehicle.getRoute().size()-1).getCity());
                 if (distance < currentMinDistance) {
                     currentMinDistance = distance;
                     currentBestEndDepot = depot;

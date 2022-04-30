@@ -32,9 +32,9 @@ public class Main {
 //    //adjacent nodes
     Set<CityNode> cities = new HashSet<>();
     CityNode a = new CityNode("A");
-    CityNode b = new CityNode("B");
-    CityNode c = new CityNode("C");
-    CityNode d = new CityNode("D");
+    CityNode b = new CityNode("B",6.0);
+    CityNode c = new CityNode("C",22.0);
+    CityNode d = new CityNode("D",25.0);
     CityNode e = new CityNode("E");
     CityNode f = new CityNode("F");
 ////      
@@ -43,11 +43,14 @@ public class Main {
 
       initMockGraph(a,b,c,d,e,f);
 //      initMockGraph(a,b,c,d,e);
-//    
+    System.out.println(FindPath.getNodesBetweenTwoCities(GRAPH,f,c));
+
 //
     //Read txt file 
 //    List<CityNode> cities = readFile();
-    GRAPH.show();
+    //GRAPH.show();
+
+    //GRAPH.blockPath(c,d);
     
 
         //parameters
@@ -93,9 +96,9 @@ public class Main {
         for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
           if(vehicle.calculateRouteDuration()<=0)
             continue;
-            System.out.println("\n" + formatOutputLine(vehicle.getStartDepot().getId(),z+1,vehicle.calculateRouteDuration(),vehicle.getCurrentLoad(),vehicle.getRoute()));
-            z++;
+            System.out.println(vehicle);
         }
+
   }
 
   private static List<CityNode> readFile() {
@@ -176,11 +179,8 @@ public class Main {
 
 
     public static String formatOutputLine(String depotID, int vehicleID, double distance, int demand, List<Order> route) {
-        String output = "ID almacen:" + depotID + "  ID vehiculo:" + vehicleID + "  tiempo:" + String.format(Locale.ROOT, "%.2f", distance) + "  carga:" + demand+ "\n ruta de entrega en oficinas: ";
-        for (Order order : route) {
-            output += order.getId() + " ";
-        }
-        return output;
+
+        return "output";
     }
 
 }
