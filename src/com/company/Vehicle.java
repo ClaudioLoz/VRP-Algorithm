@@ -18,13 +18,11 @@ public class Vehicle  {
     private List<Order> route = new ArrayList<>();
 
     public  Vehicle(Depot depot) {
-        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
     }
 
     public Vehicle(Depot depot, List<Order> route) {
-        super(depot.getX1(), depot.getY1());
         this.startDepot = depot;
         this.endDepot = depot;
         this.route = route;
@@ -34,7 +32,6 @@ public class Vehicle  {
     }
 
     public Vehicle(Depot startDepot, Depot endDepot, List<Order> route) {
-        super(startDepot.getX1(), startDepot.getY1());
         this.startDepot = startDepot;
         this.endDepot = endDepot;
         this.route = route;

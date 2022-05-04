@@ -69,23 +69,10 @@ public class Main {
         orders.add(new Order(20,  GRAPH.getCityByUbigeo("020501")));
 //        orders.add(new Order(15,GRAPH.getCityByUbigeo("020101")));
 //!
-      //        orders.add(new Order(off1,"4",0,5,f));
-//        orders.add(new Order(off2,"5",0,20,cities.get(33)));
-
-//        List<Depot> depots = new ArrayList<>();
-//        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles, cities.get(0)));
-//        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, cities.get(1)));
-//        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, cities.get(2)));
-//        List<Order> orders = new ArrayList<>();
-//        //orders arrive
-//        orders.add(new Order(off1,"b",0,10, cities.get(23)));
-//        orders.add(new Order(off1,"c",0,20, cities.get(47)));
-//        orders.add(new Order(off1,"d",0,15,cities.get(19)));
-//        orders.add(new Order(off1,"4",0,5,cities.get(7)));
-//        orders.add(new Order(off2,"5",0,20,cities.get(33)));
 //      
 //!       
-//        assignOrdersToNearestDepot2(orders,depots);
+//        assignOrdersToNearestDepot2(orders.subList(0,2),depots);
+        assignOrdersToNearestDepot2(orders,depots);
 //
 //        depots.forEach(depot ->{ System.out.println("\nDepot "+depot.getCity().getName()+"\nAssigned Orders: ");
 //            depot.getOrders().forEach(order -> System.out.println(order.getCity().getName() + " "));});
@@ -225,25 +212,6 @@ public class Main {
 
             nearestDepot.getOrders().add(order);
 
-        }
-    }
-
-    public static void assignOrdersToNearestDepot(List<Order> orders,List<Depot> depots) {
-        Depot nearestDepot = null;
-        for (Order order : orders) {
-            double minimumDistance = Double.MAX_VALUE;
-            for (Depot depot : depots) {
-                    double distance = euclideanDistance(order.getX1(), depot.getX1(), order.getY1(), depot.getY1());
-                    if (distance < minimumDistance) {
-                        minimumDistance = distance;
-                        nearestDepot = depot;
-                    }
-            }
-
-            if (nearestDepot == null) {
-                throw new NullPointerException("Nearest Depot is not set");
-            }
-            nearestDepot.getOrders().add(order);
         }
     }
 

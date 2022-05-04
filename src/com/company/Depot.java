@@ -5,31 +5,29 @@ import com.company.utils.graph.CityNode;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Depot extends Node{
+public class Depot{
     private String id;
     private double maxDuration; // D: maximum duration of a route
     private int maxLoad; // Q: allowed maximum load of a vehicle
     private int maxVehicles; // m: maximum number of vehicles available in each depot
     private List<Order> orders;
+    private CityNode city;
 
-
-    public Depot(Node node,String id,int maxLoad,int maxVehicles) {
-        super(node.getMapId(), node.getLatitude(), node.getLongitude());
+    public Depot(String id,int maxLoad,int maxVehicles) {
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;
         this.orders= new ArrayList<>();
     }
-    public Depot(Node node, String id, int maxLoad, int maxVehicles, CityNode cityNode) {
-        super(node.getMapId(), node.getLatitude(), node.getLongitude(), cityNode);
+    public Depot( String id, int maxLoad, int maxVehicles, CityNode city){
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;
         this.orders= new ArrayList<>();
+        this.city = city;
     }
 
-    public Depot(int x, int y, String id, double maxDuration, int maxLoad, int maxVehicles) {
-        super(x, y);
+    public Depot(String id, double maxDuration, int maxLoad, int maxVehicles) {
         this.id = id;
         this.maxDuration = maxDuration;
         this.maxLoad= maxLoad;
@@ -38,17 +36,13 @@ public class Depot extends Node{
     }
 
     public Depot(int maxDuration, int maxLoad, int maxVehicles) {
-        super(0, 0);
         this.orders = new ArrayList<>();
         this.maxDuration = maxDuration;
         this.maxLoad = maxLoad;
         this.maxVehicles = maxVehicles;
     }
 
-    public Depot(int x, int y) {
-        super(x, y);
-    }
-
+    
 
     public String getId() {
         return id;
@@ -89,4 +83,12 @@ public class Depot extends Node{
     public void setOrders(List<Order> orders) {
         this.orders = orders;
     }
+
+  public CityNode getCity() {
+    return city;
+  }
+
+  public void setCity(CityNode city) {
+    this.city = city;
+  }
 }
