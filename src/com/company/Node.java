@@ -3,20 +3,23 @@ package com.company;
 import com.company.utils.Util;
 import com.company.utils.graph.CityNode;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Node {
     private String mapId;
     private int x1;
     private int y1;
-    private double x;
-    private double y;
+    private double latitude;
+    private double longitude;
     private int matrixIndex;
     private CityNode city;
     public Node() {
     }
-    public Node(CityNode city) {
+
+  public Node(double latitude, double longitude) {
+    this.latitude = latitude;
+    this.longitude = longitude;
+  }
+
+  public Node(CityNode city) {
         this.city = city;
     }
 
@@ -26,30 +29,30 @@ public class Node {
         
     }
 
-    public Node(double x, double y, CityNode city) {
-        this.x = x;
-        this.y = y;
+    public Node(double latitude, double longitude, CityNode city) {
+        this.latitude = latitude;
+        this.longitude = longitude;
       this.city = city;
     }
 
-    public Node(String mapId, double x, double y, int matrixIndex) {
+    public Node(String mapId, double latitude, double longitude, int matrixIndex) {
         this.mapId = mapId;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.matrixIndex = matrixIndex;
     }
-    public Node(String mapId, double x, double y, CityNode city) {
+    public Node(String mapId, double latitude, double longitude, CityNode city) {
         this.mapId = mapId;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
         this.matrixIndex = matrixIndex;
         this.city= city;
     }
 
-    public Node(String mapId, double x, double y) {
+    public Node(String mapId, double latitude, double longitude) {
         this.mapId = mapId;
-        this.x = x;
-        this.y = y;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     
@@ -87,20 +90,20 @@ public class Node {
         this.y1 = y1;
     }
 
-    public double getX() {
-        return x;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setX(double x) {
-        this.x = x;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public double getY() {
-        return y;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setY(double y) {
-        this.y = y;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public int getMatrixIndex() {
@@ -121,6 +124,6 @@ public class Node {
 
   @Override
     public String toString() {
-        return mapId+"(x: "+x+" y:"+y+")";
+        return mapId+"(x: "+ latitude +" y:"+ longitude +")";
     }
 }

@@ -14,14 +14,14 @@ public class Depot extends Node{
 
 
     public Depot(Node node,String id,int maxLoad,int maxVehicles) {
-        super(node.getMapId(), node.getX(), node.getY());
+        super(node.getMapId(), node.getLatitude(), node.getLongitude());
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;
         this.orders= new ArrayList<>();
     }
     public Depot(Node node, String id, int maxLoad, int maxVehicles, CityNode cityNode) {
-        super(node.getMapId(), node.getX(), node.getY(), cityNode);
+        super(node.getMapId(), node.getLatitude(), node.getLongitude(), cityNode);
         this.id=id;
         this.maxLoad=maxLoad;
         this.maxVehicles=maxVehicles;

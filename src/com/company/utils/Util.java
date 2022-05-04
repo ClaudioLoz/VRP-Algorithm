@@ -1,6 +1,7 @@
 package com.company.utils;
 
 import com.company.Order;
+import com.company.utils.graph.CityNode;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -101,15 +102,38 @@ public class Util {
             for (int j = 0; j < partitionIndices.length; j++) {
                 if (i < partitionIndices[j]) {
                     parts.get(j).add(route.get(i));
-                    break;
+                  break;
                 } else if (i >= partitionIndices[partitionIndices.length - 1]) {
-                    parts.get(parts.size() - 1).add(route.get(i));
-                    break;
+                  parts.get(parts.size() - 1).add(route.get(i));
+                  break;
                 }
             }
         }
 
-        return parts;
+      return parts;
     }
+
+  public static double haversine(CityNode city1, CityNode city2) {
+    double lat1 = city1.getLatitude();
+    double lon1 = city1.getLongitude();
+    double lat2 = city2.getLatitude();
+    double lon2 = city2.getLongitude();
+    // distance between latitudes and longitudes
+    double dLat = Math.toRadians(lat2 - lat1);
+    double dLon = Math.toRadians(lon2 - lon1);
+
+    // convert to radians
+    lat1 = Math.toRadians(lat1);
+    lat2 = Math.toRadians(lat2);
+
+    // apply formulae
+    double a = Math.pow(Math.sin(dLat / 2), 2) +
+        Math.pow(Math.sin(dLon / 2), 2) *
+            Math.cos(lat1) *
+            Math.cos(lat2);
+    double rad = 6371;
+    double c = 2 * Math.asin(Math.sqrt(a));
+    return rad * c;
+  }
 
 }

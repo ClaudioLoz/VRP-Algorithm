@@ -3,18 +3,17 @@ package com.company.utils.graph;
 //https://localcoder.org/calculating-distance-between-non-directly-connected-nodes-in-matrix
 import com.company.Route;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
+
+import static com.company.utils.Constants.*;
+import static com.company.utils.Util.haversine;
 
 public class CitiesGraph{
 
   //use set which prevents duplicate entries
   private final Set<CityNode> cities;
   private final Route[][] adjacencyMatrix;
-  private static final Boolean CONNECTED = true;
-  private static final Boolean NO_CONNECTED = false;
+
 
 
   public  CitiesGraph(Set<CityNode> cities) {
@@ -23,7 +22,7 @@ public class CitiesGraph{
     //initialize matrix
     for(int row = 0; row < adjacencyMatrix.length ; row++){
       for(int col = 0; col < adjacencyMatrix[row].length ; col++){
-        adjacencyMatrix[row][col] = row == col ? new Route(0,0, CONNECTED) : new Route(0,0, NO_CONNECTED);
+        adjacencyMatrix[row][col] = row == col ? new Route(0, 0, CONNECTED) : new Route(0, 0, NOT_CONNECTED);
       }
     }
   }
@@ -34,6 +33,31 @@ public class CitiesGraph{
     adjacencyMatrix[city2.getId()][city1.getId()] = distance;
   }
 
+  public void connectCities(CityNode city1, CityNode city2) {
+    //assuming undirected graph
+    Route route = null;
+    double distance = haversine(city1, city2);
+    if (Objects.equals(city1.getRegion(), COSTA) && Objects.equals(city2.getRegion(), COSTA)) {
+      route = new Route(distance, V_COSTA_COSTA);
+    }
+    if (Objects.equals(city1.getRegion(), SIERRA) && Objects.equals(city2.getRegion(), SIERRA)) {
+      route = new Route(distance, V_SIERRA_SIERRA);
+    }
+    if (Objects.equals(city1.getRegion(), SELVA) && Objects.equals(city2.getRegion(), SELVA)) {
+      route = new Route(distance, V_SELVA_SELVA);
+    }
+    if (Objects.equals(city1.getRegion(), COSTA) && Objects.equals(city2.getRegion(), SIERRA) || Objects.equals(city1.getRegion(), SIERRA) && Objects.equals(city2.getRegion(), COSTA)) {
+      route = new Route(distance, V_COSTA_SIERRA);
+    }
+    if (Objects.equals(city1.getRegion(), SELVA) && Objects.equals(city2.getRegion(), SIERRA) || Objects.equals(city1.getRegion(), SIERRA) && Objects.equals(city2.getRegion(), SELVA)) {
+      route = new Route(distance, V_SIERRA_SELVA);
+    }
+    if (route != null) {
+      adjacencyMatrix[city1.getId()][city2.getId()] = route;
+      adjacencyMatrix[city2.getId()][city1.getId()] = route;
+    }
+  }
+
   public double getDistanceBetween(CityNode city1, CityNode city2) {
 
     return adjacencyMatrix[city1.getId()][city2.getId()].getDistance();
@@ -41,7 +65,7 @@ public class CitiesGraph{
 
   public double getTimeBetween(CityNode city1, CityNode city2) {
     Route route = adjacencyMatrix[city1.getId()][city2.getId()];
-    return route.getSpeed() > 0 ? route.getDistance()/route.getSpeed() : 0;
+    return route.getSpeed() > 0 ? route.getDistance() / route.getSpeed() : 0;
   }
   
   public Collection<CityNode> getCitiesConnectedTo(CityNode city) {
@@ -50,7 +74,7 @@ public class CitiesGraph{
     //iterate over row representing city's connections
     int column = 0;
     for(Route distance : adjacencyMatrix[city.getId()]){
-      if(distance.getConnected() != NO_CONNECTED && distance.getDistance() > 0) {
+      if (distance.getConnected() != NOT_CONNECTED && distance.getDistance() > 0) {
         connectedCities.add(getCityById(column));
       }
       column++;
@@ -82,9 +106,13 @@ public class CitiesGraph{
   }
 
   public void blockPath(CityNode city1, CityNode city2) {
-    if(areAdjacent(city1,city2)) {
-      adjacencyMatrix[city1.getId()][city2.getId()] = new Route(adjacencyMatrix[city1.getId()][city2.getId()].getDistance(),0, NO_CONNECTED);
-      adjacencyMatrix[city2.getId()][city1.getId()] = new Route(adjacencyMatrix[city1.getId()][city2.getId()].getDistance(),0, NO_CONNECTED);
+    if (areAdjacent(city1, city2)) {
+      adjacencyMatrix[city1.getId()][city2.getId()] = new Route(adjacencyMatrix[city1.getId()][city2.getId()].getDistance(), 0, NOT_CONNECTED);
+      adjacencyMatrix[city2.getId()][city1.getId()] = new Route(adjacencyMatrix[city1.getId()][city2.getId()].getDistance(), 0, NOT_CONNECTED);
     }
+  }
+
+  public CityNode getCityByUbigeo(String ubigeo) {
+    return cities.stream().filter(city -> city.getUbigeo().equals(ubigeo)).findFirst().orElse(null);
   }
 }

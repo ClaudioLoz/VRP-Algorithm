@@ -9,13 +9,13 @@ public class Order extends Node{
 
 
     public Order(Node node, String id, int timeDemand, int loadDemand) {
-        super(node.getMapId(), node.getX(), node.getY(),node.getMatrixIndex());
+        super(node.getMapId(), node.getLatitude(), node.getLongitude(),node.getMatrixIndex());
         this.id=id;
         this.timeDemand=timeDemand;
         this.loadDemand=loadDemand;
     }
     public Order(Node node, String id, int timeDemand, int loadDemand, CityNode city) {
-        super(node.getMapId(), node.getX(), node.getY(),node.getMatrixIndex());
+        super(node.getMapId(), node.getLatitude(), node.getLongitude(),node.getMatrixIndex());
         this.id=id;
         this.timeDemand=timeDemand;
         this.loadDemand=loadDemand;

@@ -74,7 +74,7 @@ public class FindPath{
 
     while (unsettledCities.size() != 0) {
       CityNode currentCity = getLowestDistanceCity(unsettledCities);
-      unsettledCities.remove(currentCity); settledCities.add(currentCity);
+      unsettledCities.remove(currentCity); settledCities.add(currentCity); 
       Collection<CityNode> connectedCities = graph.getCitiesConnectedTo(currentCity);
       for( CityNode city : connectedCities){
         double timeCity = graph.getTimeBetween(city, currentCity);
@@ -85,7 +85,7 @@ public class FindPath{
           List<CityNode> node=new ArrayList<CityNode>(nodeMap.get(currentCity));
           node.add(currentCity);
           nodeMap.put(city, node);
-          timeMap.put(city, timeMap.get(currentCity) + timeCity);
+          timeMap.put(city, timeMap.get(currentCity) + timeCity );
           if(! settledCities.contains(city)) {
             unsettledCities.add(city);
           }
