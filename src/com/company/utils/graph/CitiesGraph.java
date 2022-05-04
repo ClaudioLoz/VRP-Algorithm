@@ -52,6 +52,9 @@ public class CitiesGraph{
     if (Objects.equals(city1.getRegion(), SELVA) && Objects.equals(city2.getRegion(), SIERRA) || Objects.equals(city1.getRegion(), SIERRA) && Objects.equals(city2.getRegion(), SELVA)) {
       route = new Route(distance, V_SIERRA_SELVA);
     }
+    if (Objects.equals(city1.getRegion(), SELVA) && Objects.equals(city2.getRegion(), COSTA) || Objects.equals(city1.getRegion(), COSTA) && Objects.equals(city2.getRegion(), SELVA)) {
+      route = new Route(distance, V_COSTA_SELVA);
+    }
     if (route != null) {
       adjacencyMatrix[city1.getId()][city2.getId()] = route;
       adjacencyMatrix[city2.getId()][city1.getId()] = route;
@@ -114,5 +117,8 @@ public class CitiesGraph{
 
   public CityNode getCityByUbigeo(String ubigeo) {
     return cities.stream().filter(city -> city.getUbigeo().equals(ubigeo)).findFirst().orElse(null);
+  }
+  public CityNode getCityByNombre(String nombre) {
+    return cities.stream().filter(city -> city.getName().equals(nombre)).findFirst().orElse(null);
   }
 }

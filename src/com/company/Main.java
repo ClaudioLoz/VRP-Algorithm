@@ -1,5 +1,6 @@
 package com.company;
 
+import com.company.GA.GeneticAlgorithm;
 import com.company.utils.graph.CitiesGraph;
 import com.company.utils.graph.CityNode;
 import com.company.utils.graph.FindPath;
@@ -10,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Scanner;
 
 import static com.company.utils.MockGraph.*;
@@ -19,35 +21,14 @@ import static com.company.utils.Util.euclideanDistance;
 public class Main {
     private static CitiesGraph graph;
     public static void main(String[] args) throws IOException {
-
-//    List<Node> nodes = new ArrayList<>();
-    Node d1 = new Node("010601", -6.39590702, -77.4821999, 0);
-    Node d2 = new Node("010201", -5.63906152, -78.53166353, 1);
-    Node d3 = new Node("010401", -4.59234702, -77.86447689, 2);
-      Node off1 = new Node("010101", -6.22940827, -77.8724339, 3);
-      Node off2 = new Node("010301", -5.90432416, -77.79809916, 4);
-//
-//    nodes.add(d1);
-//    nodes.add(d2);
-//    nodes.add(d3);
-//    nodes.add(off1);
-//    nodes.add(off2);
-//    int nodesNumber= nodes.size();
-//    
-//!    //adjacent nodes
-//    Set<CityNode> cities = new HashSet<>();
-//    CityNode a = new CityNode("A");
-//    CityNode b = new CityNode("B",6.0);
-//    CityNode c = new CityNode("C",22.0);
-//    CityNode d = new CityNode("D",25.0);
-//    CityNode e = new CityNode("E");
-//    CityNode f = new CityNode("F");
-
+      
+      
       List<CityNode> citiesFile = readCitiesFile();
       initCities(citiesFile);
       readRouteFile();
-      GRAPH.show();
-      if (citiesFile.size() > 0) return;
+//      GRAPH.show();
+//      if (citiesFile.size() > 0) return;
+//        List<Order> orders = readOrderFile();
 //!    cities.addAll(List.of(a,b,c,d,e,f));
 //    cities.addAll(List.of(a,b,c,d,e));
 
@@ -56,8 +37,7 @@ public class Main {
 //    System.out.println(FindPath.getNodesBetweenTwoCities(GRAPH,f,c));
 
 //
-      //Read txt file 
-//    List<CityNode> cities = readFile();
+      //Read txt file
       //GRAPH.show();
 
       //GRAPH.blockPath(c,d);
@@ -65,19 +45,29 @@ public class Main {
 
       //parameters
 //!
-//        final int maxNumberLimaVehicles = 2;
-//        final int maxNumberTrujilloVehicles = 2;
-//        final int maxNumberArequipaVehicles = 2;
-//
-//        List<Depot> depots = new ArrayList<>();
-//        depots.add(new Depot(d1,"a",100,maxNumberLimaVehicles,a));
-//        depots.add(new Depot(d2,"f",100,maxNumberTrujilloVehicles, f));
-//        depots.add(new Depot(d3,"e",100,maxNumberArequipaVehicles, e));
-//        List<Order> orders = new ArrayList<>();
+      
+        final int maxNumberLimaVehicles = 21;
+        final int maxNumberTrujilloVehicles = 10;
+        final int maxNumberArequipaVehicles = 14;
+        CityNode arequipa = GRAPH.getCityByNombre("AREQUIPA");
+        CityNode trujillo = GRAPH.getCityByNombre("TRUJILLO");
+        CityNode lima = GRAPH.getCityByNombre("LIMA");
+
+        List<Depot> depots = new ArrayList<>();
+        depots.add(new Depot("LIMA",1000,maxNumberLimaVehicles,lima));
+        depots.add(new Depot("TRUJILLO",1000,maxNumberTrujilloVehicles, trujillo));
+        depots.add(new Depot("AREQUIPA",1000,maxNumberArequipaVehicles, arequipa));
+//        //LIMA:150101 
+//        //TRUJILLO:130101
+//        //AREQUIPA:040101 
+      
 //        //orders arrive
-//        orders.add(new Order(off1,"b",0,10, b));
-//        orders.add(new Order(off1,"c",0,20, c));
-//        orders.add(new Order(off1,"d",0,15,d));
+        List<Order> orders = new ArrayList<>();
+
+
+        orders.add(new Order(10,  GRAPH.getCityByUbigeo("020501")));
+        orders.add(new Order(20,  GRAPH.getCityByUbigeo("020501")));
+//        orders.add(new Order(15,GRAPH.getCityByUbigeo("020101")));
 //!
       //        orders.add(new Order(off1,"4",0,5,f));
 //        orders.add(new Order(off2,"5",0,20,cities.get(33)));
@@ -97,22 +87,49 @@ public class Main {
 //!       
 //        assignOrdersToNearestDepot2(orders,depots);
 //
-//        depots.forEach(depot ->{ System.out.println("\nDepot "+depot.getMapId()+"\nAssigned Orders: ");
-//            depot.getOrders().forEach(order -> System.out.println(order.getMapId() + " "));});
-//        GeneticAlgorithm ga = new GeneticAlgorithm(depots);
-//        ga.run();
-//
-//
-//        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
-//        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
-//        int z=0;
-//        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
-//          if(vehicle.calculateRouteDuration()<=0)
-//            continue;
-//            System.out.println(vehicle);
-//        }
+//        depots.forEach(depot ->{ System.out.println("\nDepot "+depot.getCity().getName()+"\nAssigned Orders: ");
+//            depot.getOrders().forEach(order -> System.out.println(order.getCity().getName() + " "));});
 
+      long startTime = System.currentTimeMillis();
+      GeneticAlgorithm ga = new GeneticAlgorithm(depots);
+        ga.run();
+      long endTime = System.currentTimeMillis() - startTime; // tiempo en que se ejecuta su for 
+      System.out.println("Tiempo de ejecución: " + endTime/1000 + " segundos");
+//      System.out.println(FindPath.calculateShortestPath(GRAPH, trujillo, GRAPH.getCityByUbigeo("020501")));
+//      System.out.println(FindPath.getNodesBetweenTwoCities(GRAPH, trujillo, GRAPH.getCityByUbigeo("020501")));
+//
+        System.out.println("Fitness: "+ String.format(Locale.ROOT, "%.2f", ga.getAlphaSolution().getFitness()));
+        System.out.println("Numero de rutas:" + ga.getAlphaSolution().getVehicles().size());
+        int z=0;
+        for ( Vehicle vehicle: ga.getAlphaSolution().getVehicles()){
+          if(vehicle.calculateRouteDuration()<=0)
+            continue;
+            System.out.println(vehicle);
+        }
+  
     }
+
+  private static List<Order> readOrderFile() {
+    File file = new File("D:/JavaProjects/VRP-Algorithm/src/com/company/resources/inf226.ventas202205.txt");
+    List<Order> orders = new ArrayList<>();
+    try {
+      String line;
+      String[] splittedLine;
+      BufferedReader br = new BufferedReader(new FileReader(file));
+      Scanner scanner;
+      while ((line = br.readLine()) != null) {
+        splittedLine = line.split(",");
+        int demand = Integer.parseInt(splittedLine[2].trim());
+        splittedLine = splittedLine[1].trim().split(" =>  ");
+        String startDeportUbigeo = splittedLine[1];
+        orders.add(new Order(demand, GRAPH.getCityByUbigeo(startDeportUbigeo)));
+      }
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+    return orders;
+  }
 
 
   private static List<CityNode> readCitiesFile() {

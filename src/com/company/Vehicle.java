@@ -9,7 +9,7 @@ import java.util.*;
 
 import static com.company.utils.MockGraph.GRAPH;
 
-public class Vehicle extends Node {
+public class Vehicle  {
     private static int counter =0;
     private final int id = counter ++;
     private Depot startDepot;

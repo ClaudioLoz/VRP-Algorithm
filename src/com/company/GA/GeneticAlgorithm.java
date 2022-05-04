@@ -6,8 +6,8 @@ import java.util.List;
 
 public class GeneticAlgorithm {
     // Parameters
-    private final int maxGenerations=1000;
-    private final int populationSize = 70;
+    private final int maxGenerations = 10;
+    private final int populationSize = 75;
     private final double crossOverRate = 0.8; // 80%-95%
     private final double mutationRate = 0.03; // 0.5%-1%.
     private final int tournamentSize = 3; // Number of members in tournament selection
